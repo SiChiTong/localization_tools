@@ -9,14 +9,15 @@
 #   represented by the robot's sensors.                     #
 #                                                           #
 #############################################################
+from __future__ import print_function
 
 import rospy
 import math
 import time
 import threading
 import subprocess
+import sys
 from copy import deepcopy
-from __future__ import print_function
 
 from std_msgs.msg import *
 from geometry_msgs.msg import *
@@ -99,8 +100,9 @@ class ObjectLocalizer:
 
     def __init__(self, marker_namespace, data_dir, planner_service, execution_service):
         self.marker_namespace = marker_namespace
-        self.populate_menu()
         self.status = ObjectStatus()
+        self.initialize_menu()
+        self.populate_menu()
         #Setup the interactive marker server
         self.server = InteractiveMarkerServer(self.marker_namespace)
         rospy.loginfo("Connecting to planner...")
@@ -119,6 +121,7 @@ class ObjectLocalizer:
             self.update()
             rate.sleep()
 
+
     def update(self):
         # This bugfix should have made it into Groovy
         #for marker_name in self.server.marker_contexts.keys():
@@ -129,31 +132,6 @@ class ObjectLocalizer:
         self.menu_handler.apply(self.server, "object_alignment")
         self.server.applyChanges()
 
-    #Pull this menu into a giant list of dicts
-    hubo_menu = [
-        {'label':"Snap with ICP", 'action': print, 'args': ['Snapping with ICP!']},
-        {'label':"Plan PREGRASP", 'action':self.call_planner, 'args':[self.status.PREGRASP]},
-        {'label':"Plan MOVEFORWARD", 'action':self.call_planner, 'args':[self.status.MOVEFORWARD]},
-        {'label':"Plan GRASP", 'action':self.call_planner, 'args':[self.status.GRASP]},
-        {'label':"Plan UNGRASP", 'action':self.call_planner, 'args':[self.status.UNGRASP]},
-        {'label':"Plan TURNING", 'action':self.call_planner, 'args':[self.status.TURNING]},
-        {'label':"Plan FINISH", 'action':self.call_planner, 'args':[self.status.FINISH]},
-        {'label':"Preview plan", 'action':self.call_planner, 'args':[self.status.PREVIEW]},
-        {'label':"Execute plan", 'action':self.call_planner, 'args':[self.status.EXECUTE]},
-        {'label':"Increase radius by 1.0cm", 'action': self.mod_property, 'args':[self.status,'radius',0.01]},
-        {'label':"Decrease radius by 1.0cm", 'action': self.mod_property, 'args':[self.status,'radius',-0.01]},
-        {'label':"Increase height by 1.0cm", 'action': self.mod_property, 'args':[self.status,'height',0.01]},
-        {'label':"Decrease height by 1.0cm", 'action': self.mod_property, 'args':[self.status,'height',-0.01]},
-        {'label':"Reset to default radius", 'action': self.switch_property, 'args':[self.status,'radius','default_radius']},
-        {'label':"Reset to default height", 'action': self.switch_property, 'args':[self.status,'height','default_height']},
-        {'label':"Reset to default pose", 'action': self.switch_property, 'args':[self.status,'pose_stamped','default_pose_stamped']},
-        {'label':"Reset to session default pose", 'action': self.switch_property, 'args':[self.status,'pose_stamped','session_pose_stamped']},
-        {'label':"Set session default pose", 'action': self.switch_property, 'args':[self.status,'session_pose_stamped','pose_stamped']},
-        {'label':"Use LEFT hand", 'action': self.switch_property, 'args':[self.status,'hands','LEFT']},
-        {'label':"Use RIGHT hand", 'action': self.switch_property, 'args':[self.status,'hands','RIGHT']},
-        {'label':"Turn object CLOCKWISE", 'action': self.switch_property, 'args':[self.status,'turning_direction','CW']},
-        {'label':"Turn object COUNTERCLOCKWISE", 'action': self.switch_property, 'args':[self.status,'turning_direction','CCW']}
-    ]
 
     def mod_property(mod_object,mod_attr,mod_value):
         '''Modify state machine attribute by a certain amount '''
@@ -167,13 +145,40 @@ class ObjectLocalizer:
             current_value = deepcopy(current_value)
         setattr(mod_object,mod_attr,current_value)
 
+    def initialize_menu(self):
+        #Pull this menu into a giant list of dicts
+        self.hubo_menu = [
+            {'label':"Snap with ICP", 'action': print, 'args': ['Snapping with ICP!']},
+            {'label':"Plan PREGRASP", 'action':self.call_planner, 'args':[self.status.PREGRASP]},
+            {'label':"Plan MOVEFORWARD", 'action':self.call_planner, 'args':[self.status.MOVEFORWARD]},
+            {'label':"Plan GRASP", 'action':self.call_planner, 'args':[self.status.GRASP]},
+            {'label':"Plan UNGRASP", 'action':self.call_planner, 'args':[self.status.UNGRASP]},
+            {'label':"Plan TURNING", 'action':self.call_planner, 'args':[self.status.TURN]},
+            {'label':"Plan FINISH", 'action':self.call_planner, 'args':[self.status.FINISH]},
+            {'label':"Preview plan", 'action':self.call_planner, 'args':[self.status.PREVIEW]},
+            {'label':"Execute plan", 'action':self.call_planner, 'args':[self.status.EXECUTE]},
+            {'label':"Increase radius by 1.0cm", 'action': self.mod_property, 'args':[self.status,'radius',0.01]},
+            {'label':"Decrease radius by 1.0cm", 'action': self.mod_property, 'args':[self.status,'radius',-0.01]},
+            {'label':"Increase height by 1.0cm", 'action': self.mod_property, 'args':[self.status,'height',0.01]},
+            {'label':"Decrease height by 1.0cm", 'action': self.mod_property, 'args':[self.status,'height',-0.01]},
+            {'label':"Reset to default radius", 'action': self.switch_property, 'args':[self.status,'radius','default_radius']},
+            {'label':"Reset to default height", 'action': self.switch_property, 'args':[self.status,'height','default_height']},
+            {'label':"Reset to default pose", 'action': self.switch_property, 'args':[self.status,'pose_stamped','default_pose_stamped']},
+            {'label':"Reset to session default pose", 'action': self.switch_property, 'args':[self.status,'pose_stamped','session_pose_stamped']},
+            {'label':"Set session default pose", 'action': self.switch_property, 'args':[self.status,'session_pose_stamped','pose_stamped']},
+            {'label':"Use LEFT hand", 'action': self.switch_property, 'args':[self.status,'hands','LEFT']},
+            {'label':"Use RIGHT hand", 'action': self.switch_property, 'args':[self.status,'hands','RIGHT']},
+            {'label':"Turn object CLOCKWISE", 'action': self.switch_property, 'args':[self.status,'turning_direction','CW']},
+            {'label':"Turn object COUNTERCLOCKWISE", 'action': self.switch_property, 'args':[self.status,'turning_direction','CCW']}
+        ]
+
     def populate_menu(self):
         #Pull the options out the easy way (list comprehension on the menu list)
         self.options = [option['label'] for option in self.hubo_menu]
         self.menu_handler = MenuHandler()
         i = 1
         for menu_option in self.options:
-            print "Option ID: " + str(i) + " option: " + menu_option
+            print("Option ID: " + str(i) + " option: " + menu_option)
             self.menu_handler.insert(menu_option, callback=self.alignment_feedback_cb)
             i += 1
 
@@ -218,7 +223,7 @@ class ObjectLocalizer:
 
     def call_planner(self, stage):
         self.status.planning_status = stage
-        print stage
+        print(stage)
 
         if stage == ObjectStatus.PREGRASP:
             
@@ -249,7 +254,7 @@ class ObjectLocalizer:
             req.ManipulatorID = int(self.status.hands == self.status.RIGHT)
             res = None
             try:
-                print req
+                print(req)
                 res = self.pregrasp_planner_client.call(req)
                 self.status.operating_status = self.status.PLANNING
                 #print res
@@ -265,17 +270,17 @@ class ObjectLocalizer:
             pass
         # Creates a SimpleActionClient, passing the type of action to the constructor.
         client = actionlib.SimpleActionClient('/hubo_trajectory_server_joint', hubo_robot_msgs.msg.JointTrajectoryAction )
-        print "waiting for server!"
+        print("waiting for server!")
         client.wait_for_server()
         self.last_plan.header.stamp = rospy.Time.now()
         traj_goal = hubo_robot_msgs.msg.JointTrajectoryGoal()
         traj_goal.trajectory = self.last_plan
         traj_goal.trajectory.header.stamp = rospy.Time.now() + rospy.Duration.from_sec(1.0)
         client.send_goal( traj_goal )
-        print "Wait for result!"
+        print("Wait for result!")
         client.wait_for_result()
         res = client.get_result()
-        print res 
+        print(res)
 
     def alignment_feedback_cb(self, feedback):
         cur_pose = feedback.pose
