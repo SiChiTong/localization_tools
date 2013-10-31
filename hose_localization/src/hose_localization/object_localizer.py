@@ -16,6 +16,7 @@ import time
 import threading
 import subprocess
 from copy import deepcopy
+from __future__ import print_function
 
 from std_msgs.msg import *
 from geometry_msgs.msg import *
@@ -128,8 +129,47 @@ class ObjectLocalizer:
         self.menu_handler.apply(self.server, "object_alignment")
         self.server.applyChanges()
 
+    #Pull this menu into a giant list of dicts
+    hubo_menu = [
+        {'label':"Snap with ICP", 'action': print, 'args': ['Snapping with ICP!']},
+        {'label':"Plan PREGRASP", 'action':self.call_planner, 'args':[self.status.PREGRASP]},
+        {'label':"Plan MOVEFORWARD", 'action':self.call_planner, 'args':[self.status.MOVEFORWARD]},
+        {'label':"Plan GRASP", 'action':self.call_planner, 'args':[self.status.GRASP]},
+        {'label':"Plan UNGRASP", 'action':self.call_planner, 'args':[self.status.UNGRASP]},
+        {'label':"Plan TURNING", 'action':self.call_planner, 'args':[self.status.TURNING]},
+        {'label':"Plan FINISH", 'action':self.call_planner, 'args':[self.status.FINISH]},
+        {'label':"Preview plan", 'action':self.call_planner, 'args':[self.status.PREVIEW]},
+        {'label':"Execute plan", 'action':self.call_planner, 'args':[self.status.EXECUTE]},
+        {'label':"Increase radius by 1.0cm", 'action': self.mod_property, 'args':[self.status,'radius',0.01]},
+        {'label':"Decrease radius by 1.0cm", 'action': self.mod_property, 'args':[self.status,'radius',-0.01]},
+        {'label':"Increase height by 1.0cm", 'action': self.mod_property, 'args':[self.status,'height',0.01]},
+        {'label':"Decrease height by 1.0cm", 'action': self.mod_property, 'args':[self.status,'height',-0.01]},
+        {'label':"Reset to default radius", 'action': self.switch_property, 'args':[self.status,'radius','default_radius']},
+        {'label':"Reset to default height", 'action': self.switch_property, 'args':[self.status,'height','default_height']},
+        {'label':"Reset to default pose", 'action': self.switch_property, 'args':[self.status,'pose_stamped','default_pose_stamped']},
+        {'label':"Reset to session default pose", 'action': self.switch_property, 'args':[self.status,'pose_stamped','session_pose_stamped']},
+        {'label':"Set session default pose", 'action': self.switch_property, 'args':[self.status,'session_pose_stamped','pose_stamped']},
+        {'label':"Use LEFT hand", 'action': self.switch_property, 'args':[self.status,'hands','LEFT']},
+        {'label':"Use RIGHT hand", 'action': self.switch_property, 'args':[self.status,'hands','RIGHT']},
+        {'label':"Turn object CLOCKWISE", 'action': self.switch_property, 'args':[self.status,'turning_direction','CW']},
+        {'label':"Turn object COUNTERCLOCKWISE", 'action': self.switch_property, 'args':[self.status,'turning_direction','CCW']}
+    ]
+
+    def mod_property(mod_object,mod_attr,mod_value):
+        '''Modify state machine attribute by a certain amount '''
+        current_value = getattr(mod_object,mod_attr)
+        setattr(mod_object,mod_attr,current_value+mod_value)
+
+    def switch_property(mod_object,mod_attr,new_mod_attr):
+        '''Replace one state machine attribute with another attribute'''
+        current_value = getattr(mod_object,new_mod_attr)
+        if new_mod_attr in ['default_pose_stamped','session_pose_stamped','pose_stamped']:
+            current_value = deepcopy(current_value)
+        setattr(mod_object,mod_attr,current_value)
+
     def populate_menu(self):
-        self.options = ["Snap with ICP", "Plan PREGRASP", "Plan MOVEFORWARD", "Plan GRASP", "Plan UNGRASP", "Plan TURNING", "Plan FINISH", "Preview plan", "Execute plan", "Increase radius by 1.0cm", "Decrease radius by 1.0cm", "Increase height by 1.0cm", "Decrease height by 1.0cm", "Reset to default radius","Reset to default height", "Reset to default pose", "Reset to session default pose", "Set session default pose", "Use LEFT hand", "Use RIGHT hand", "Turn object CLOCKWISE", "Turn object COUNTERCLOCKWISE"]
+        #Pull the options out the easy way (list comprehension on the menu list)
+        self.options = [option['label'] for option in self.hubo_menu]
         self.menu_handler = MenuHandler()
         i = 1
         for menu_option in self.options:
@@ -138,50 +178,13 @@ class ObjectLocalizer:
             i += 1
 
     def process_menu_select(self, menu_entry_id):
-        if (menu_entry_id == 1):
-            print "Snapping with ICP!"
-        elif (menu_entry_id == 2):
-            self.call_planner(self.status.PREGRASP)
-        elif (menu_entry_id == 3):
-            self.call_planner(self.status.MOVEFORWARD)
-        elif (menu_entry_id == 4):
-            self.call_planner(self.status.GRASP)
-        elif (menu_entry_id == 5):
-            self.call_planner(self.status.UNGRASP)
-        elif (menu_entry_id == 6):
-            self.call_planner(self.status.TURN)
-        elif (menu_entry_id == 7):
-            self.call_planner(self.status.FINISH)
-        elif (menu_entry_id == 8):
-            self.call_execute(self.status.PREVIEW)
-        elif (menu_entry_id == 9):
-            self.call_execute(self.status.EXECUTE)
-        elif (menu_entry_id == 10):
-            self.status.radius += 0.01
-        elif (menu_entry_id == 11):
-            self.status.radius += (-0.01)
-        elif (menu_entry_id == 12):
-            self.status.height += 0.01
-        elif (menu_entry_id == 13):
-            self.status.height += (-0.01)
-        elif (menu_entry_id == 14):
-            self.status.radius = self.status.default_radius
-        elif (menu_entry_id == 15):
-            self.status.height = self.status.default_height
-        elif (menu_entry_id == 16):
-            self.status.pose_stamped = deepcopy(self.status.default_pose_stamped)
-        elif (menu_entry_id == 17):
-            self.status.pose_stamped = deepcopy(self.status.session_pose_stamped)
-        elif (menu_entry_id == 18):
-            self.status.session_pose_stamped = deepcopy(self.status.pose_stamped)
-        elif (menu_entry_id == 19):
-            self.status.hands = self.status.LEFT
-        elif (menu_entry_id == 20):
-            self.status.hands = self.status.RIGHT
-        elif (menu_entry_id == 21):
-            self.status.turning_direction = self.status.CW
-        elif (menu_entry_id == 22):
-            self.status.turning_direction = self.status.CCW
+        #I really hate giant arrays of nonsense
+        #This all just got localized into something more sensical
+        #Each entry has a function and a list of arguments
+        #BOOM
+        if menu_entry_id in self.hubo_menu:
+            option = self.hubo_menu[menu_entry_id]
+            option['action'](*(option['args']))
         else:
             rospy.logerr("Unrecognized menu entry")
 
