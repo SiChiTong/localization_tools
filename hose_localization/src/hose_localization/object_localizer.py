@@ -187,8 +187,8 @@ class ObjectLocalizer:
         #This all just got localized into something more sensical
         #Each entry has a function and a list of arguments
         #BOOM
-        if menu_entry_id in self.hubo_menu:
-            option = self.hubo_menu[menu_entry_id]
+        if menu_entry_id <= len(self.hubo_menu):
+            option = self.hubo_menu[menu_entry_id-1]
             option['action'](*(option['args']))
         else:
             rospy.logerr("Unrecognized menu entry")
