@@ -10,7 +10,9 @@
 #                                                           #
 #############################################################
 from __future__ import print_function
-
+import roslib
+roslib.load_manifest('hose_localization')
+roslib.load_manifest('python_orocos_kdl')
 import rospy
 import math
 import time
@@ -108,9 +110,9 @@ class ObjectLocalizer:
         rospy.loginfo("Connecting to planner...")
         #self.planner_client = rospy.ServiceProxy(planner_service, PlanTurning)
         #self.planner_client.wait_for_service()
-        self.pregrasp_planner_client = rospy.ServiceProxy('/pregrasp_planning',PosePlanningSrv)
+        self.pregrasp_planner_client = rospy.ServiceProxy('pregrasp_planning',PosePlanningSrv)
         self.pregrasp_planner_client.wait_for_service()
-        self.move_straight_planner_client = rospy.ServiceProxy('/move_straight_planning',PosePlanningSrv)
+        self.move_straight_planner_client = rospy.ServiceProxy('move_straight_planning',PosePlanningSrv)
         
         #self.execution_client = rospy.ServiceProxy(execution_service, ExecuteTurning)
         #self.execution_client.wait_for_service()
@@ -269,7 +271,7 @@ class ObjectLocalizer:
         if not self.last_plan:
             pass
         # Creates a SimpleActionClient, passing the type of action to the constructor.
-        client = actionlib.SimpleActionClient('/hubo_trajectory_server_joint', hubo_robot_msgs.msg.JointTrajectoryAction )
+        client = actionlib.SimpleActionClient('hubo_trajectory_server_joint', hubo_robot_msgs.msg.JointTrajectoryAction )
         print("waiting for server!")
         client.wait_for_server()
         self.last_plan.header.stamp = rospy.Time.now()
