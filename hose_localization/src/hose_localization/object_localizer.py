@@ -157,8 +157,8 @@ class ObjectLocalizer:
             {'label':"Plan UNGRASP", 'action':self.call_planner, 'args':[self.status.UNGRASP]},
             {'label':"Plan TURNING", 'action':self.call_planner, 'args':[self.status.TURN]},
             {'label':"Plan FINISH", 'action':self.call_planner, 'args':[self.status.FINISH]},
-            {'label':"Preview plan", 'action':self.call_planner, 'args':[self.status.PREVIEW]},
-            {'label':"Execute plan", 'action':self.call_planner, 'args':[self.status.EXECUTE]},
+            {'label':"Preview plan", 'action':self.call_execute, 'args':[self.status.PREVIEW]},
+            {'label':"Execute plan", 'action':self.call_execute, 'args':[self.status.EXECUTE]},
             {'label':"Increase radius by 1.0cm", 'action': self.mod_property, 'args':[self.status,'radius',0.01]},
             {'label':"Decrease radius by 1.0cm", 'action': self.mod_property, 'args':[self.status,'radius',-0.01]},
             {'label':"Increase height by 1.0cm", 'action': self.mod_property, 'args':[self.status,'height',0.01]},
@@ -243,12 +243,11 @@ class ObjectLocalizer:
             hand_tran[:3,2] = target_tran[:3,0]
             hand_tran[:3,0] = target_tran[:3,1]
             pregrasp_tran = hand_tran.copy()
+
             #The approach direction of this gripper is -y for some reason
             pregrasp_tran[:3,3] = pregrasp_tran[:3,3] + pregrasp_tran[:3,1]*pregrasp_distance
-
             hand_tran_pose = pm.toMsg(pm.fromMatrix(hand_tran))
             pregrasp_pose = pm.toMsg(pm.fromMatrix(pregrasp_tran))
-
 
 
             req = PosePlanningSrv._request_class()
@@ -271,18 +270,36 @@ class ObjectLocalizer:
         if not self.last_plan:
             pass
         # Creates a SimpleActionClient, passing the type of action to the constructor.
-        client = actionlib.SimpleActionClient('hubo_trajectory_server_joint', hubo_robot_msgs.msg.JointTrajectoryAction )
-        print("waiting for server!")
-        client.wait_for_server()
-        self.last_plan.header.stamp = rospy.Time.now()
-        traj_goal = hubo_robot_msgs.msg.JointTrajectoryGoal()
-        traj_goal.trajectory = self.last_plan
-        traj_goal.trajectory.header.stamp = rospy.Time.now() + rospy.Duration.from_sec(1.0)
-        client.send_goal( traj_goal )
-        print("Wait for result!")
-        client.wait_for_result()
-        res = client.get_result()
-        print(res)
+        if(mode == self.status.EXECUTE):
+
+            client = actionlib.SimpleActionClient('hubo_trajectory_server_joint', hubo_robot_msgs.msg.JointTrajectoryAction )
+            print("waiting for server!")
+            client.wait_for_server()
+            self.last_plan.header.stamp = rospy.Time.now()
+            traj_goal = hubo_robot_msgs.msg.JointTrajectoryGoal()
+            traj_goal.trajectory = self.last_plan
+            traj_goal.trajectory.header.stamp = rospy.Time.now() + rospy.Duration.from_sec(1.0)
+            client.send_goal( traj_goal )
+            print("Wait for result!")
+            client.wait_for_result()
+            res = client.get_result()
+            print(res)
+
+        if(mode == self.status.PREVIEW):
+            client = actionlib.SimpleActionClient('show_trajectory', hubo_robot_msgs.msg.JointTrajectoryAction )
+            print("waiting for server!")
+            client.wait_for_server()
+            self.last_plan.header.stamp = rospy.Time.now()
+            traj_goal = hubo_robot_msgs.msg.JointTrajectoryGoal()
+            traj_goal.trajectory = self.last_plan
+            traj_goal.trajectory.header.stamp = rospy.Time.now() + rospy.Duration.from_sec(1.0)
+            client.send_goal( traj_goal )
+            print("Wait for result!")
+            client.wait_for_result()
+            res = client.get_result()
+            print(res)
+    
+
 
     def alignment_feedback_cb(self, feedback):
         cur_pose = feedback.pose
