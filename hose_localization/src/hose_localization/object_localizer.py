@@ -32,7 +32,7 @@ from icp_server_msgs.msg import *
 from icp_server_msgs.srv import *
 from valve_planner_msgs.msg import *
 from valve_planner_msgs.srv import *
-from hubo_manipulation_planner.srv import PosePlanningSrv
+from hubo_hose_task_planner_msgs.srv import PosePlanningSrv
 import tf_conversions.posemath as pm
 import tf
 

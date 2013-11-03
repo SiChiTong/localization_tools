@@ -16,6 +16,8 @@
   <build_depend>icp_server_msgs</build_depend>
   <build_depend>valve_planner_msgs</build_depend>
   <build_depend>message_generation</build_depend>
+  <build_depend>hubo_hose_task_planner_msgs</build_depend>
+  <build_depend>hubo_planning_common</build_depend>
 
   <run_depend>roscpp</run_depend>
   <run_depend>geometry_msgs</run_depend>
@@ -25,7 +27,8 @@
   <run_depend>icp_server_msgs</run_depend>
   <run_depend>valve_planner_msgs</run_depend>
   <run_depend>message_runtime</run_depend>
-
+  <run_depend>hubo_hose_task_planner_msgs</run_depend>
+  <run_depend>hubo_planning_common</run_depend>
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- You can specify that this package is a metapackage here: -->
