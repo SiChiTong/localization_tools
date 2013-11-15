@@ -12,6 +12,9 @@
 import rospy
 import math
 from copy import deepcopy
+import roslib
+roslib.load_manifest('kdl')
+roslib.load_manifest('hose_localization')
 
 from std_msgs.msg import *
 from geometry_msgs.msg import *
@@ -26,6 +29,7 @@ from actionlib import *
 from transformation_helper import *
 import numpy
 from moveable_button_marker import MoveableButtonMarker
+import ipdb
 
 class GripperMarker (MoveableButtonMarker):
     def __init__(self, marker_namespace, is_left_side = True, 
@@ -37,7 +41,7 @@ class GripperMarker (MoveableButtonMarker):
             self.marker_mesh_file = "package://drchubo_v3/meshes/convhull_LWR_merged.stl"
             self.side = 'left'
         
-        self.other_frames = ['/Body_TSY','/left_hand']
+        self.other_frames = ['/Body_TSY','/leftPalm']
         self.tf_listener = tf.TransformListener()
         self.tf_broadcaster = tf.TransformBroadcaster()
         
@@ -58,6 +62,9 @@ class GripperMarker (MoveableButtonMarker):
         self.object_marker.scale.x = 1.0
         self.object_marker.scale.y = 1.0
         self.object_marker.scale.z = 1.0
+        self.object_marker.color.r = 1.0
+        self.object_marker.color.g = 1.0
+        self.object_marker.color.b = 1.0
         self.object_marker.color.a = 1.0
         
         
@@ -73,22 +80,31 @@ class GripperMarker (MoveableButtonMarker):
     def update(self):
         MoveableButtonMarker.update(self)
         tfp = ComponentsFromTransform(PoseToTransform(self.int_marker.pose))
-        self.tf_broadcaster.sendTransform(tfp[0],tfp[1], rospy.Time.now(), self.int_marker.name, self.int_marker.header.frame_id )
-        """
+        self.tf_broadcaster.sendTransform(tfp[0],tfp[1], rospy.Time().now(), self.int_marker.name, self.int_marker.header.frame_id )
+
+        self.int_marker.description = ""
         for tf_name in self.other_frames:
-            self.tf_listener.waitForTransform(self.int_marker.name, self.int_marker.header.frame_id, rospy.Time(0), rospy.Duration(.5))
-            other_basis_tf = self.tf_listener.lookupTransform(self.int_marker.name, tf_name, rospy.Time(0)) 
-            self.tf_broadcaster.BroadcastTransform(other_basis_tf[0], other_basis_tf[1], rospy.Time.now(),tf_name, self.int_marker.name + '_to_' + tf_name)
-        """
+            if self.tf_listener.canTransform(self.int_marker.name, tf_name, rospy.Time(0)):
+                
+                other_basis_tf = self.tf_listener.lookupTransform(self.int_marker.name, tf_name, rospy.Time(0))
+                
+                other_euler = tf.transformations.euler_from_quaternion(other_basis_tf[1])
+                xyz_str = "[" + ",".join(["%.3f"%(num) for num in other_basis_tf[0]]) +"]"
+                euler_str = "[" + ",".join(["%.3f"%(num) for num in other_euler]) + "]"
+                self.int_marker.description ="%s\n Frame: %s XYZ - %s: Euler - %s "%(self.int_marker.description, 
+                                                                       tf_name, xyz_str, euler_str)
+                
+        
 
 
 if __name__ == '__main__':
     def print_pose(marker):
         print "Marker pose"
         print marker.marker_pose_stamped
-
-    rospy.init_node('gripper_marker_test')
-    grasper_marker = GripperMarker('gripper_marker_test',True, "/leftFoot")
+    namespace = rospy.get_param('~user_ns_','left_gripper_marker' )
+    print namespace
+    rospy.init_node(namespace)
+    grasper_marker = GripperMarker(namespace,True, "/leftFoot")
     grasper_marker.update_menu("output pose", print_pose, [grasper_marker])
 
     grasper_marker.populate_menu()                

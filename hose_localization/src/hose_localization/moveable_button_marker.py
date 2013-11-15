@@ -94,6 +94,7 @@ class MoveableButtonMarker(object):
         self.int_marker.header.frame_id = self.marker_pose_stamped.header.frame_id
         self.int_marker.pose = self.marker_pose_stamped.pose
 
+
     def create_marker(self):
         
         self.int_marker.name = "button_marker"
