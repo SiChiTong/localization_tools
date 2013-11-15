@@ -25,6 +25,7 @@ from transformation_helper import *
 import numpy
 from moveable_button_marker import MoveableButtonMarker
 import ipdb
+import stable_pointcloud_snapshotter
 
 class ObjectStatus:
 
@@ -72,8 +73,8 @@ class GraspableCylinderMarker(MoveableButtonMarker):
                                self.status.RIGHT: rospy.Publisher(self.right_pose_topic, PoseStamped)       
                                }
         self.tf_broadcaster = tf.TransformBroadcaster()
-        
-    
+        self.tf_listener = tf.TransformListener()
+        self.snapshotter = stable_pointcloud_snapshotter.StablePointcloudSnapshotter(frame, 1,'/snapshot_input_cloud', self.tf_listener, self.tf_broadcaster)
 
     def send_hand_pose(self, pose_stamped_msg):
         self.hand_pose_publishers[self.status.hands].publish(pose_stamped_msg)
@@ -179,7 +180,8 @@ class GraspableCylinderMarker(MoveableButtonMarker):
             {'label':"Reset to session default pose", 'action': self.switch_property, 'args':[self.status,'pose_stamped','session_pose_stamped']},
             {'label':"Set session default pose", 'action': self.switch_property, 'args':[self.status,'session_pose_stamped','pose_stamped']},
             {'label':"Use LEFT hand", 'action': self.switch_property, 'args':[self.status,'hands','LEFT']},
-            {'label':"Use RIGHT hand", 'action': self.switch_property, 'args':[self.status,'hands','RIGHT']}            
+            {'label':"Use RIGHT hand", 'action': self.switch_property, 'args':[self.status,'hands','RIGHT']},
+            {'label':"Take Snapshot", 'action': self.snapshotter.snapshot, 'args': []}
         ]
 
         self.populate_menu()
@@ -191,6 +193,7 @@ class GraspableCylinderMarker(MoveableButtonMarker):
         tfp = ComponentsFromTransform(PoseToTransform(self.int_marker.pose))
         
         self.tf_broadcaster.sendTransform(tfp[0],tfp[1], rospy.Time().now(), self.int_marker.name, self.int_marker.header.frame_id )
+        self.snapshotter.update()
 
 
 if __name__ == '__main__':
