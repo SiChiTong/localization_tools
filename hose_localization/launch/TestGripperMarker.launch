@@ -1,0 +1,17 @@
+<launch>
+<param name="robot_description" textfile="$(find drchubo_v3)/robots/drchubo_v3.urdf"/>
+	<node name="simple_hubo_state_publisher_node" pkg="hubo_state_publisher" type="simple_hubo_state_publisher_node" />
+
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> 
+
+	<node name="test_simple_state_publisher" pkg="hubo_state_publisher" type="test_simple_hubo_state_publisher.py" /> 
+	
+
+    <node
+    name="rviz"
+    pkg="rviz"	
+    type="rviz"	
+    args="-d $(find drchubo_v3)/urdf.rviz" />
+
+    <node name="test_gripper_marker" pkg="hose_localization" type="gripper_marker.py" /> 
+</launch>
