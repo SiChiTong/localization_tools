@@ -14,4 +14,5 @@
     args="-d $(find drchubo_v3)/urdf.rviz" />
 
     <node name="test_gripper_marker" pkg="hose_localization" type="gripper_marker.py" /> 
+
 </launch>

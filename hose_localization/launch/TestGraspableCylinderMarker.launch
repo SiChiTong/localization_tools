@@ -24,8 +24,9 @@
 
     <include file="$(find ud_sensor_head)/launch/ud_sim_full_robot.launch" />
 
-    <node name="test_gripper_marker" pkg="hose_localization" type="gripper_marker.py" output="$(arg output)" >
+    <node name="left_gripper_marker" pkg="hose_localization" type="gripper_marker.py" output="$(arg output)" >
       <remap from="/tf" to="$(arg remapped_tf)" />
+      <param name="~user_ns_" value="/left_gripper_marker"/>
 
     </node> 
 
@@ -40,8 +41,8 @@
     </node>
 
 
-    <!--<node name="snapshotter" pkg="hose_localization" type="stable_pointcloud_snapshotter.py" output="screen" >
+    <node name="graspable_cylinder" pkg="hose_localization" type="graspable_cylinder_marker.py" output="screen" >
         <remap from="/tf" to="$(arg remapped_tf)" /> 					    
-    </node>-->
+    </node> 
 
 </launch>
