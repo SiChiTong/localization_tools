@@ -29,8 +29,8 @@ class StablePointcloudSnapshotter(object):
             
         def set_cloud(self, pointcloud):
             self.pointcloud = pointcloud
-            self.saved_transform = tf_listener.lookupTransform(self.stable_frame, self.pointcloud.header.frame_id, rospy.Time(0))
-            self.pointcloud.header.frame_id = self.snapshot_frame
+            self.saved_transform = self.tf_listener.lookupTransform(self.stable_frame, self.pointcloud.header.frame_id, rospy.Time(0))
+            self.pointcloud.header.frame_id = "/" + self.snapshot_frame
             self.cloud_publisher = rospy.Publisher(self.cloud_name, PointCloud2)
         
         def stop_publisher(self):
