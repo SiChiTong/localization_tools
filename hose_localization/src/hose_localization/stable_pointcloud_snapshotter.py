@@ -119,7 +119,7 @@ class StablePointcloudSnapshotter(object):
         
         test_int_mark_cont = InteractiveMarkerControl()
         test_int_mark_cont.always_visible = True
-        test_int_mark_cont.interaction_mode = InteractiveMarkerControl.BUTTON
+        test_int_mark_cont.interaction_mode = InteractiveMarkerControl.MENU
 
         test_mark = Marker()
         test_mark.type = Marker.SPHERE
