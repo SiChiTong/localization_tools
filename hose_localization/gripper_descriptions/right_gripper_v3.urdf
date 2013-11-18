@@ -1,0 +1,395 @@
+<?xml version="1.0" ?>
+<robot name="drchubo_right_gripper_v3">
+    <link name="Body_RWR">
+        <visual>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RWR_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="">
+                <color rgba="0.3 0.3 0.3 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RWR_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+        <inertial>
+            <mass value="1.26227162553"/>
+            <inertia ixx="0.00137019038629" ixy="-6.08173568367e-05" ixz="5.84193124812e-06" iyy="0.00133077281236" iyz="1.17164831963e-05" izz="0.00120357514264"/>
+            <origin rpy="0 0 0" xyz="0.0461316332402 0.000476271776753 0.0008021254173"/>
+        </inertial>
+    </link>
+    <link name="rightPalm">
+        <inertial>
+            <mass value="0.1"/>
+            <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </inertial>
+    </link>
+    <joint name="RWR_dummy" type="fixed">
+        <parent link="Body_RWR"/>
+        <child link="rightPalm"/>
+        <origin rpy="0 0 -1.57079632679" xyz="0.1 0 0"/>
+    </joint>
+<link name="Body_RF41">
+        <visual>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF11.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="">
+                <color rgba="0.3 0.3 0.3 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF11.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+        <inertial>
+            <mass value="0.0263710561485"/>
+            <inertia ixx="1.98396452599e-06" ixy="3.66951887147e-08" ixz="-7.82216984076e-08" iyy="6.90160003554e-06" iyz="-5.52885002718e-09" izz="6.59611728997e-06"/>
+            <origin rpy="0 0 0" xyz="0.0136755315275 0.0001676659415 0.000198749354248"/>
+        </inertial>
+    </link>
+    <joint name="RF2" type="revolute">
+        <parent link="Body_RWR"/>
+        <child link="Body_RF41"/>
+        <origin rpy="-1.5708 0 0" xyz="0.0875 0.026 0.0445"/>
+        <axis xyz="0 0 -1.0"/>
+        <limit effort="25" lower="-1.91728423726" upper="0" velocity="6.28318530718"/>
+    </joint>
+    <link name="Body_RF42">
+        <visual>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF12_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="">
+                <color rgba="0.3 0.3 0.3 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF12_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+        <inertial>
+            <mass value="0.016189368249"/>
+            <inertia ixx="1.30911370818e-06" ixy="1.49423602565e-08" ixz="-5.01486524729e-08" iyy="2.82043860524e-06" iyz="-2.8629444527e-09" izz="3.05888536891e-06"/>
+            <origin rpy="0 0 0" xyz="0.0110393059886 0.000234060880175 5.56986057552e-05"/>
+        </inertial>
+    </link>
+    <joint name="RF42" type="revolute">
+        <parent link="Body_RF41"/>
+        <child link="Body_RF42"/>
+        <origin rpy="0 1.3963 0" xyz="0.041952 0 -0.002"/>
+        <axis xyz="0 1.0 0"/>
+        <limit effort="25" lower="-3.14159265359" upper="3.14159265359" velocity="6.28318530718"/>
+        <mimic joint="RF2" />
+    </joint>
+    <link name="Body_RF43">
+        <visual>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF13_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="">
+                <color rgba="0.3 0.3 0.3 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF13_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+        <inertial>
+            <mass value="0.0182221650877"/>
+            <inertia ixx="1.03181617487e-06" ixy="-4.94978359879e-08" ixz="-1.22492186704e-07" iyy="2.57254536616e-06" iyz="-5.58418574878e-09" izz="2.54656084717e-06"/>
+            <origin rpy="0 0 0" xyz="0.0171497739791 -0.000431859131656 0.000224831410368"/>
+        </inertial>
+    </link>
+    <joint name="RF43" type="revolute">
+        <parent link="Body_RF42"/>
+        <child link="Body_RF43"/>
+        <origin rpy="0 1.3963 0" xyz="0.029967 0 -0.0014"/>
+        <axis xyz="0 1.0 0"/>
+        <limit effort="25" lower="-3.14159265359" upper="3.14159265359" velocity="6.28318530718"/>
+        <mimic joint="RF2" />
+    </joint>
+    <link name="Body_RF11">
+        <visual>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF11.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="">
+                <color rgba="0.3 0.3 0.3 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF11.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+        <inertial>
+            <mass value="0.0263710648328"/>
+            <inertia ixx="1.98396439062e-06" ixy="3.66951330319e-08" ixz="-7.82216813087e-08" iyy="6.90160086478e-06" iyz="-5.52885566501e-09" izz="6.59611827284e-06"/>
+            <origin rpy="0 0 0" xyz="0.013675535045 0.000167665760228 0.000198749511991"/>
+        </inertial>
+    </link>
+    <joint name="RF1" type="revolute">
+        <parent link="Body_RWR"/>
+        <child link="Body_RF11"/>
+        <origin rpy="1.5708 0 0" xyz="0.0875 -0.026 0.02247"/>
+        <axis xyz="0 0 1.0"/>
+        <limit effort="25" lower="-1.85349620283" upper="0.2" velocity="6.28318530718"/>
+    </joint>
+    <link name="Body_RF12">
+        <visual>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF12_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="">
+                <color rgba="0.3 0.3 0.3 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF12_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+        <inertial>
+            <mass value="0.016189368249"/>
+            <inertia ixx="1.30911370818e-06" ixy="1.49423602565e-08" ixz="-5.01486524729e-08" iyy="2.82043860524e-06" iyz="-2.8629444527e-09" izz="3.05888536891e-06"/>
+            <origin rpy="0 0 0" xyz="0.0110393059886 0.000234060880175 5.56986057553e-05"/>
+        </inertial>
+    </link>
+    <joint name="RF12" type="revolute">
+        <parent link="Body_RF11"/>
+        <child link="Body_RF12"/>
+        <origin rpy="0 1.3963 0" xyz="0.041952 0 -0.002"/>
+        <axis xyz="0 1.0 0"/>
+        <limit effort="25" lower="-3.14159265359" upper="3.14159265359" velocity="6.28318530718"/>
+	<mimic joint="RF1" />
+    </joint>
+    <link name="Body_RF13">
+        <visual>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF13_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="">
+                <color rgba="0.3 0.3 0.3 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF13_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+        <inertial>
+            <mass value="0.0182221650877"/>
+            <inertia ixx="1.03181617487e-06" ixy="-4.94978359879e-08" ixz="-1.22492186704e-07" iyy="2.57254536616e-06" iyz="-5.58418574879e-09" izz="2.54656084717e-06"/>
+            <origin rpy="0 0 0" xyz="0.0171497739791 -0.000431859131656 0.000224831410368"/>
+        </inertial>
+    </link>
+    <joint name="RF13" type="revolute">
+        <parent link="Body_RF12"/>
+        <child link="Body_RF13"/>
+        <origin rpy="0 1.3963 0" xyz="0.029967 0 -0.0014"/>
+        <axis xyz="0 1.0 0"/>
+        <limit effort="25" lower="-3.14159265359" upper="3.14159265359" velocity="6.28318530718"/>
+	<mimic joint="RF1" />
+    </joint>
+    <link name="Body_RF21">
+        <visual>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF11.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="">
+                <color rgba="0.3 0.3 0.3 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF11.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+        <inertial>
+            <mass value="0.0263710648328"/>
+            <inertia ixx="1.98396439062e-06" ixy="3.66951330319e-08" ixz="-7.82216813087e-08" iyy="6.90160086478e-06" iyz="-5.52885566501e-09" izz="6.59611827284e-06"/>
+            <origin rpy="0 0 0" xyz="0.013675535045 0.000167665760228 0.000198749511991"/>
+        </inertial>
+    </link>
+    <joint name="RF21" type="revolute">
+        <parent link="Body_RWR"/>
+        <child link="Body_RF21"/>
+        <origin rpy="-1.5708 0 0" xyz="0.0875 0.026 3e-05"/>
+        <axis xyz="0 0 -1.0"/>
+        <limit effort="25" lower="-3.14159265359" upper="3.14159265359" velocity="6.28318530718"/>
+	<mimic joint="RF1" />
+    </joint>
+    <link name="Body_RF22">
+        <visual>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF12_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="">
+                <color rgba="0.3 0.3 0.3 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF12_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+        <inertial>
+            <mass value="0.016189368249"/>
+            <inertia ixx="1.30911370818e-06" ixy="1.49423602565e-08" ixz="-5.01486524729e-08" iyy="2.82043860524e-06" iyz="-2.8629444527e-09" izz="3.05888536891e-06"/>
+            <origin rpy="0 0 0" xyz="0.0110393059886 0.000234060880175 5.56986057552e-05"/>
+        </inertial>
+    </link>
+    <joint name="RF22" type="revolute">
+        <parent link="Body_RF21"/>
+        <child link="Body_RF22"/>
+        <origin rpy="0 1.3963 0" xyz="0.041952 0 -0.002"/>
+        <axis xyz="0 1.0 0"/>
+        <limit effort="25" lower="-3.14159265359" upper="3.14159265359" velocity="6.28318530718"/>
+	<mimic joint="RF1" />
+    </joint>
+    <link name="Body_RF23">
+        <visual>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF13_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="">
+                <color rgba="0.3 0.3 0.3 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF13_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+        <inertial>
+            <mass value="0.0182221650877"/>
+            <inertia ixx="1.03181617487e-06" ixy="-4.94978359879e-08" ixz="-1.22492186704e-07" iyy="2.57254536616e-06" iyz="-5.58418574878e-09" izz="2.54656084717e-06"/>
+            <origin rpy="0 0 0" xyz="0.0171497739791 -0.000431859131656 0.000224831410368"/>
+        </inertial>
+    </link>
+    <joint name="RF23" type="revolute">
+        <parent link="Body_RF22"/>
+        <child link="Body_RF23"/>
+        <origin rpy="0 1.3963 0" xyz="0.029967 0 -0.0014"/>
+        <axis xyz="0 1.0 0"/>
+        <limit effort="25" lower="-3.14159265359" upper="3.14159265359" velocity="6.28318530718"/>
+	<mimic joint="RF1" />
+    </joint>
+    <link name="Body_RF31">
+        <visual>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF11.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="">
+                <color rgba="0.3 0.3 0.3 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF11.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+        <inertial>
+            <mass value="0.0263710648328"/>
+            <inertia ixx="1.98396439062e-06" ixy="3.66951330319e-08" ixz="-7.82216813087e-08" iyy="6.90160086478e-06" iyz="-5.52885566502e-09" izz="6.59611827284e-06"/>
+            <origin rpy="0 0 0" xyz="0.013675535045 0.000167665760228 0.000198749511991"/>
+        </inertial>
+    </link>
+    <joint name="RF31" type="revolute">
+        <parent link="Body_RWR"/>
+        <child link="Body_RF31"/>
+        <origin rpy="1.5708 0 0" xyz="0.0875 -0.026 -0.02247"/>
+        <axis xyz="0 0 1.0"/>
+        <limit effort="25" lower="-3.14159265359" upper="3.14159265359" velocity="6.28318530718"/>
+	<mimic joint="RF1" />
+    </joint>
+    <link name="Body_RF32">
+        <visual>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF12_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="">
+                <color rgba="0.3 0.3 0.3 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF12_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+        <inertial>
+            <mass value="0.016189368249"/>
+            <inertia ixx="1.30911370818e-06" ixy="1.49423602565e-08" ixz="-5.01486524729e-08" iyy="2.82043860524e-06" iyz="-2.8629444527e-09" izz="3.05888536891e-06"/>
+            <origin rpy="0 0 0" xyz="0.0110393059886 0.000234060880175 5.56986057552e-05"/>
+        </inertial>
+    </link>
+    <joint name="RF32" type="revolute">
+        <parent link="Body_RF31"/>
+        <child link="Body_RF32"/>
+        <origin rpy="0 1.3963 0" xyz="0.041952 0 -0.002"/>
+        <axis xyz="0 1.0 0"/>
+        <limit effort="25" lower="-3.14159265359" upper="3.14159265359" velocity="6.28318530718"/>
+	<mimic joint="RF1" />
+    </joint>
+    <link name="Body_RF33">
+        <visual>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF13_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="">
+                <color rgba="0.3 0.3 0.3 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RF13_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+        <inertial>
+            <mass value="0.0182221650877"/>
+            <inertia ixx="1.03181617487e-06" ixy="-4.94978359879e-08" ixz="-1.22492186704e-07" iyy="2.57254536616e-06" iyz="-5.58418574879e-09" izz="2.54656084717e-06"/>
+            <origin rpy="0 0 0" xyz="0.0171497739791 -0.000431859131656 0.000224831410368"/>
+        </inertial>
+    </link>
+    <joint name="RF33" type="revolute">
+        <parent link="Body_RF32"/>
+        <child link="Body_RF33"/>
+        <origin rpy="0 1.3963 0" xyz="0.029967 0 -0.0014"/>
+        <axis xyz="0 1.0 0"/>
+        <limit effort="25" lower="-3.14159265359" upper="3.14159265359" velocity="6.28318530718"/>
+	<mimic joint="RF1" />
+    </joint>
+</robot>
