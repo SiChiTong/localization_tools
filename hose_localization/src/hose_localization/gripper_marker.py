@@ -35,13 +35,14 @@ class GripperMarker (MoveableButtonMarker):
     def __init__(self, marker_namespace, is_left_side = True, 
                frame="/world", marker_tran = numpy.eye(4)):
         MoveableButtonMarker.__init__(self, marker_namespace, frame, marker_tran)
-        self.marker_mesh_file =  "package://drchubo_v3/meshes/convhull_RWR_merged.stl"
+        #self.marker_mesh_file =  "package://drchubo_v3/meshes/convhull_RWR_merged.stl"
         self.side = 'right'
         if is_left_side:
-            self.marker_mesh_file = "package://drchubo_v3/meshes/convhull_LWR_merged.stl"
+            #self.marker_mesh_file = "package://drchubo_v3/meshes/convhull_LWR_merged.stl"
             self.side = 'left'
-        
-        self.other_frames = ['/Body_TSY','/leftPalm']
+        self.marker_frame = "/%s_gripper/Body_%sWR"%(self.side, self.side[0].upper())
+        self.marker_target_frame="/%s_gripper/%sPalm"%(self.side, self.side)
+        self.other_frames = ['/Body_TSY','/%sPalm'%(self.side)]
         self.tf_listener = tf.TransformListener()
         self.tf_broadcaster = tf.TransformBroadcaster()
         
@@ -54,14 +55,16 @@ class GripperMarker (MoveableButtonMarker):
         base_control.always_visible = True
         self.object_marker = Marker()
         self.object_marker.id = 1
-        self.object_marker.type = Marker.MESH_RESOURCE
-        self.object_marker.mesh_resource = self.marker_mesh_file
-        self.object_marker.mesh_use_embedded_materials = True
+        self.object_marker.type = Marker.SPHERE
+
         self.object_marker.lifetime = rospy.Duration(0.5)
-        self.object_marker.header.frame_id = self.int_marker.header.frame_id
-        self.object_marker.scale.x = 1.0
-        self.object_marker.scale.y = 1.0
-        self.object_marker.scale.z = 1.0
+        self.object_marker.header.frame_id = self.marker_frame
+        self.object_marker.pose = Pose()
+        self.object_marker.pose.orientation.w = 1
+        self.object_marker.pose.position.x = -.1
+        self.object_marker.scale.x = .05
+        self.object_marker.scale.y = .05
+        self.object_marker.scale.z = .05
         self.object_marker.color.r = 1.0
         self.object_marker.color.g = 1.0
         self.object_marker.color.b = 1.0
@@ -74,25 +77,25 @@ class GripperMarker (MoveableButtonMarker):
 
 
     def create_marker(self):
-        MoveableButtonMarker.create_marker(self)         
+        MoveableButtonMarker.create_marker(self, .3)         
         self.int_marker.name=self.side + "_gripper_marker"
         
     def update(self):
-        MoveableButtonMarker.update(self)
+        #MoveableButtonMarker.update(self)
         tfp = ComponentsFromTransform(PoseToTransform(self.int_marker.pose))
-        self.tf_broadcaster.sendTransform(tfp[0],tfp[1], rospy.Time().now(), self.int_marker.name, self.int_marker.header.frame_id )
+        self.tf_broadcaster.sendTransform(tfp[0],tfp[1], rospy.Time().now(), self.marker_frame, self.int_marker.header.frame_id )
 
         self.int_marker.description = ""
         for tf_name in self.other_frames:
-            if self.tf_listener.canTransform(self.int_marker.name, tf_name, rospy.Time(0)):
+            if self.tf_listener.canTransform(self.marker_target_frame, tf_name, rospy.Time(0)):
                 
-                other_basis_tf = self.tf_listener.lookupTransform(self.int_marker.name, tf_name, rospy.Time(0))
+                other_basis_tf = self.tf_listener.lookupTransform( tf_name, self.marker_target_frame, rospy.Time(0))
                 
                 other_euler = tf.transformations.euler_from_quaternion(other_basis_tf[1])
                 xyz_str = "[" + ",".join(["%.3f"%(num) for num in other_basis_tf[0]]) +"]"
                 euler_str = "[" + ",".join(["%.3f"%(num) for num in other_euler]) + "]"
                 self.int_marker.description ="%s\n Frame: %s XYZ - %s: Euler - %s "%(self.int_marker.description, 
-                                                                       tf_name, xyz_str, euler_str)
+                                                                                     tf_name, xyz_str, euler_str)
                 
         
 
@@ -111,12 +114,13 @@ if __name__ == '__main__':
     loop = rospy.Rate(5)
     server = InteractiveMarkerServer(grasper_marker.marker_namespace)
     grasper_marker.create_marker()
-    while not rospy.is_shutdown():
+    server.insert(grasper_marker.int_marker, grasper_marker.int_marker_feedback_cb)
+    grasper_marker.menu_handler.apply(server,grasper_marker.int_marker.name)
+    server.applyChanges()
+    while not rospy.is_shutdown():                
         grasper_marker.update()
-        server.clear()
         server.insert(grasper_marker.int_marker, grasper_marker.int_marker_feedback_cb)
-        grasper_marker.menu_handler.apply(server,grasper_marker.int_marker.name)
-        grasper_marker.update()
+        server.setPose(grasper_marker.int_marker.name, grasper_marker.int_marker.pose)
         server.applyChanges()
         
         loop.sleep()
