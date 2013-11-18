@@ -4,7 +4,7 @@ project(hose_localization)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS geometry_msgs roscpp rospy sensor_msgs std_msgs icp_server_msgs valve_planner_msgs hubo_hose_task_planner_msgs message_generation)
+find_package(catkin REQUIRED COMPONENTS geometry_msgs roscpp rospy sensor_msgs std_msgs icp_server_msgs valve_planner_msgs hubo_hose_task_planner_msgs message_generation tf_conversions)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -52,7 +52,7 @@ catkin_python_setup()
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES valve_localization
-  CATKIN_DEPENDS geometry_msgs roscpp rospy sensor_msgs std_msgs icp_server_msgs valve_planner_msgs message_runtime hubo_hose_task_planner_msgs
+  CATKIN_DEPENDS geometry_msgs roscpp rospy sensor_msgs std_msgs icp_server_msgs valve_planner_msgs message_runtime hubo_hose_task_planner_msgs tf_conversions
   DEPENDS system_lib
 )
 
