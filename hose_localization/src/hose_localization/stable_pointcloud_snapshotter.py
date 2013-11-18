@@ -43,24 +43,32 @@ class StablePointcloudSnapshotter(object):
 
     def add_pointcloud_to_menu(self, snapshot_number):
         local_top = self.menu_handler.insert( "Snapshot %d"%(snapshot_number) )
+        self.cloudmenu[local_top] = snapshot_number
 
         #Show/Hide the pointcloud
         local_hide = self.menu_handler.insert( "Hide", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
         self.menu_handler.setCheckState(local_hide, MenuHandler.UNCHECKED )
+        self.cloudmenu[local_hide] = local_top
 
         local_highlight = self.menu_handler.insert( "Highlight", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
         self.menu_handler.setCheckState(local_highlight, MenuHandler.UNCHECKED)
+        self.cloudmenu[local_highlight] = local_top
 
         local_trans = self.menu_handler.insert( "Set Transparency", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
         self.menu_handler.setCheckState(local_trans, MenuHandler.UNCHECKED)
+        self.cloudmenu[local_trans] = local_top
 
         local_move = self.menu_handler.insert( "Move", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
         self.menu_handler.setCheckState(local_trans, MenuHandler.UNCHECKED)
+        self.cloudmenu[local_move] = local_top
 
         local_delete = self.menu_handler.insert( "Delete Points", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
         self.menu_handler.setCheckState(local_delete, MenuHandler.UNCHECKED)
+        self.cloudmenu[local_delete] = local_top
 
-        self.menu_handler.insert( "Delete Cloud", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
+        local_kill = self.menu_handler.insert( "Delete Cloud", parent = top_level_entry, top_level_entry, self.kill_entry_cb)
+        #We'll need this for the callback
+        self.cloudmenu[local_kill] = local_top
         
 
     def hide_entry_cb(self, menu_entry_feedback):
