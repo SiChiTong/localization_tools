@@ -108,6 +108,7 @@ class StablePointcloudSnapshotter(object):
         self.cloud_topic_name = cloud_topic_name
 
         self.menu_handler = MenuHandler()
+        self.cloudmenu = dict()
         self.interactive_marker_server
 
 
