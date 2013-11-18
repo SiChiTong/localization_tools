@@ -95,10 +95,10 @@ class MoveableButtonMarker(object):
         self.int_marker.pose = self.marker_pose_stamped.pose
 
 
-    def create_marker(self):
+    def create_marker(self, scale = 1.0):
         
         self.int_marker.name = "button_marker"
-        self.int_marker.scale = 1.0
+        self.int_marker.scale = scale
         # Make the default control for the marker itself
         
         self.make_object_marker()
