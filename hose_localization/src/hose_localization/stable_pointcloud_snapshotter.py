@@ -66,7 +66,7 @@ class StablePointcloudSnapshotter(object):
         self.cloud_menu_handler.setCheckState(local_delete, MenuHandler.UNCHECKED)
         self.cloud_menu[local_delete] = local_top
 
-        local_kill = self.cloud_menu_handler.insert( "Delete Cloud", parent = top_level_entry, callback= self.kill_entry_cb)
+        local_kill = self.cloud_menu_handler.insert( "Delete Cloud", parent = top_level_entry, callback= self.hide_entry_cb)
         #We'll need this for the callback
         self.cloud_menu[local_kill] = local_top
         
@@ -108,23 +108,30 @@ class StablePointcloudSnapshotter(object):
         self.cloud_topic_name = cloud_topic_name
 
         self.cloud_menu_handler = MenuHandler()
+        self.cloud_menu_handler.insert("Blarghle")
         self.cloud_menu = dict()
         self.interactive_marker_server = InteractiveMarkerServer("nimbus")
+
+        test_int_mark = InteractiveMarker()
+        test_int_mark.header.frame_id = "/leftFoot"
+        test_int_mark.scale = 1
+        test_int_mark.name="deathstar"
+        
+        test_int_mark_cont = InteractiveMarkerControl()
+        test_int_mark_cont.always_visible = True
+        test_int_mark_cont.interaction_mode = InteractiveMarkerControl.BUTTON
+
         test_mark = Marker()
         test_mark.type = Marker.SPHERE
         test_mark.scale.x = test_mark.scale.y = test_mark.scale.z = .5
         test_mark.color.a = 1
-        test_int_mark_cont = InteractiveMarkerControl()
-        test_int_mark_cont.always_visible = True
-        test_int_mark_cont.interaction_mode = InteractiveMarkerControl.BUTTON
+        
         test_int_mark_cont.markers.append(test_mark)
-        test_int_mark = InteractiveMarker()
-        test_int_mark.header.frame_id = "/leftFoot"
-        test_int_mark.scale = 1
         test_int_mark.controls.append(test_int_mark_cont)
+
         self.interactive_marker_server.insert(test_int_mark)
+        self.cloud_menu_handler.apply(self.interactive_marker_server, "deathstar")
         self.interactive_marker_server.applyChanges()
-        self.cloud_menu_handler.apply(self.interactive_marker_server, "nimbus_1")
 
 
     def snapshot_callback(self, msg):
