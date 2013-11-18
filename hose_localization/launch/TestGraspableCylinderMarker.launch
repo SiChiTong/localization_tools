@@ -3,26 +3,10 @@
 <arg name="output" default="log" />
 <param name="robot_description" textfile="$(find drchubo_v3)/robots/drchubo_v3.urdf"/>
 
-    <!-- <node name="simple_hubo_state_publisher_node" pkg="hubo_state_publisher" type="simple_hubo_state_publisher_node" output="$(arg output)" >
-      <remap from="/tf" to="$(arg remapped_tf)" />
-    </node>
 
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="$(arg output)" >
-      <remap from="/tf" to="$(arg remapped_tf)" />
-    </node> 
-
-    <node name="test_simple_state_publisher" pkg="hubo_state_publisher" type="test_simple_hubo_state_publisher.py" output="screen" >
-      <remap from="/tf" to="$(arg remapped_tf)" />
-    </node> 
-	
-
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find drchubo_v3)/urdf.rviz" output="$(arg output)" >
-      <remap from="/tf" to="$(arg remapped_tf)" />
-    </node>
-
--->
-
-    <include file="$(find ud_sensor_head)/launch/ud_sim_full_robot.launch" />
+    <include file="$(find ud_sensor_head)/launch/ud_sim_full_robot.launch" >
+        <arg name="rviz_file" value="$(find hose_localization)/graspable_cylinder.rviz"/>
+    </include>
 
 
     <node name="pcd_transfrom_publisher" pkg="tf" type="static_transform_publisher" args="-.7 0 0 0 0 0 /rightFoot /pcd_transform 100"  output="$(arg output)" >
@@ -35,6 +19,6 @@
       <remap from="cloud_pcd" to="/rgbd_longrange/depth/points_xyzrgb"/>
     </node>
 
-    <include file="$(find hose_localization)/launch/LaunchHoserMarkers.launch" />
+    <include file="$(find hose_localization)/launch/LaunchHoseMarkers.launch" />
 
 </launch>
