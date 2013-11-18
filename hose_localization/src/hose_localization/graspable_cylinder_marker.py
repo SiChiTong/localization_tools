@@ -149,13 +149,13 @@ class GraspableCylinderMarker(MoveableButtonMarker):
 
 
         #Align hand perpendicular to cylinder in its canonical pose
-        hand_tran[:3,1] = target_tran[:3,2]
-        hand_tran[:3,2] = target_tran[:3,0]
+        hand_tran[:3,1] = -target_tran[:3,0]
+        hand_tran[:3,2] = target_tran[:3,2]
         hand_tran[:3,0] = target_tran[:3,1]
         pregrasp_tran = hand_tran.copy()
 
         #The approach direction of this gripper is -y for some reason
-        pregrasp_tran[:3,3] = pregrasp_tran[:3,3] + pregrasp_tran[:3,1]*pregrasp_distance
+        pregrasp_tran[:3,3] = pregrasp_tran[:3,3] + -pregrasp_tran[:3,0]*pregrasp_distance
         hand_tran_pose = PoseFromMatrix(hand_tran)
         pregrasp_pose = PoseFromMatrix(pregrasp_tran)
         pregrasp_pose_stamped = PoseStamped()
