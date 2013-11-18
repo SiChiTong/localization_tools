@@ -8,6 +8,9 @@ from transformation_helper import *
 import tf
 import IPython
 
+from interactive_markers.interactive_marker_server import *
+from interactive_markers.menu_handler import *
+
 
 class StablePointcloudSnapshotter(object):
     class StableCloud(object):
@@ -39,10 +42,25 @@ class StablePointcloudSnapshotter(object):
 
 
     def add_pointcloud_to_menu(self, snapshot_number):
-        top_level_entry = self.menu_handler.insert( "Snapshot %d"%(snapshot_number) )
-        #fixme make this a checkbox
-        self.menu_handler.insert( "Hide", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
-        #FIXME 
+        local_top = self.menu_handler.insert( "Snapshot %d"%(snapshot_number) )
+
+        #Show/Hide the pointcloud
+        local_hide = self.menu_handler.insert( "Hide", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
+        self.menu_handler.setCheckState(local_hide, MenuHandler.UNCHECKED )
+
+        local_highlight = self.menu_handler.insert( "Highlight", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
+        self.menu_handler.setCheckState(local_highlight, MenuHandler.UNCHECKED)
+
+        local_trans = self.menu_handler.insert( "Set Transparency", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
+        self.menu_handler.setCheckState(local_trans, MenuHandler.UNCHECKED)
+
+        local_move = self.menu_handler.insert( "Move", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
+        self.menu_handler.setCheckState(local_trans, MenuHandler.UNCHECKED)
+
+        local_delete = self.menu_handler.insert( "Delete Points", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
+        self.menu_handler.setCheckState(local_delete, MenuHandler.UNCHECKED)
+
+        self.menu_handler.insert( "Delete Cloud", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
         
 
     def hide_entry_cb(self, menu_entry_feedback):
@@ -81,7 +99,7 @@ class StablePointcloudSnapshotter(object):
         self.snapshot_list = [self.StableCloud(stable_frame, cloud_ind, self.tf_listener, self.tf_broadcaster) for cloud_ind in xrange(max_clouds)]
         self.cloud_topic_name = cloud_topic_name
 
-        self.menu_handler
+        self.menu_handler = MenuHandler()
         self.interactive_marker_server
 
 
