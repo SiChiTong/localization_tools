@@ -24,11 +24,6 @@
 
     <include file="$(find ud_sensor_head)/launch/ud_sim_full_robot.launch" />
 
-    <node name="left_gripper_marker" pkg="hose_localization" type="gripper_marker.py" output="$(arg output)" >
-      <remap from="/tf" to="$(arg remapped_tf)" />
-      <param name="~user_ns_" value="/left_gripper_marker"/>
-
-    </node> 
 
     <node name="pcd_transfrom_publisher" pkg="tf" type="static_transform_publisher" args="-.7 0 0 0 0 0 /rightFoot /pcd_transform 100"  output="$(arg output)" >
       <remap from="/tf" to="$(arg remapped_tf)" />
@@ -40,9 +35,6 @@
       <remap from="cloud_pcd" to="/rgbd_longrange/depth/points_xyzrgb"/>
     </node>
 
-
-    <node name="graspable_cylinder" pkg="hose_localization" type="graspable_cylinder_marker.py" output="screen" >
-        <remap from="/tf" to="$(arg remapped_tf)" /> 					    
-    </node> 
+    <include file="$(find hose_localization)/launch/LaunchHoserMarkers.launch" />
 
 </launch>
