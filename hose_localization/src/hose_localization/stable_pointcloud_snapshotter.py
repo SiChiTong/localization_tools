@@ -42,33 +42,33 @@ class StablePointcloudSnapshotter(object):
 
 
     def add_pointcloud_to_menu(self, snapshot_number):
-        local_top = self.menu_handler.insert( "Snapshot %d"%(snapshot_number) )
-        self.cloudmenu[local_top] = snapshot_number
+        local_top = self.cloud_menu_handler.insert( "Snapshot %d"%(snapshot_number) )
+        self.cloud_menu[local_top] = snapshot_number
 
         #Show/Hide the pointcloud
-        local_hide = self.menu_handler.insert( "Hide", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
-        self.menu_handler.setCheckState(local_hide, MenuHandler.UNCHECKED )
-        self.cloudmenu[local_hide] = local_top
+        local_hide = self.cloud_menu_handler.insert( "Hide", parent = top_level_entry, callback= self.hide_entry_cb)
+        self.cloud_menu_handler.setCheckState(local_hide, MenuHandler.UNCHECKED )
+        self.cloud_menu[local_hide] = local_top
 
-        local_highlight = self.menu_handler.insert( "Highlight", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
-        self.menu_handler.setCheckState(local_highlight, MenuHandler.UNCHECKED)
-        self.cloudmenu[local_highlight] = local_top
+        local_highlight = self.cloud_menu_handler.insert( "Highlight", parent = top_level_entry, callback= self.hide_entry_cb)
+        self.cloud_menu_handler.setCheckState(local_highlight, MenuHandler.UNCHECKED)
+        self.cloud_menu[local_highlight] = local_top
 
-        local_trans = self.menu_handler.insert( "Set Transparency", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
-        self.menu_handler.setCheckState(local_trans, MenuHandler.UNCHECKED)
-        self.cloudmenu[local_trans] = local_top
+        local_trans = self.cloud_menu_handler.insert( "Set Transparency", parent = top_level_entry, callback= self.hide_entry_cb)
+        self.cloud_menu_handler.setCheckState(local_trans, MenuHandler.UNCHECKED)
+        self.cloud_menu[local_trans] = local_top
 
-        local_move = self.menu_handler.insert( "Move", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
-        self.menu_handler.setCheckState(local_trans, MenuHandler.UNCHECKED)
-        self.cloudmenu[local_move] = local_top
+        local_move = self.cloud_menu_handler.insert( "Move", parent = top_level_entry, callback= self.hide_entry_cb)
+        self.cloud_menu_handler.setCheckState(local_trans, MenuHandler.UNCHECKED)
+        self.cloud_menu[local_move] = local_top
 
-        local_delete = self.menu_handler.insert( "Delete Points", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
-        self.menu_handler.setCheckState(local_delete, MenuHandler.UNCHECKED)
-        self.cloudmenu[local_delete] = local_top
+        local_delete = self.cloud_menu_handler.insert( "Delete Points", parent = top_level_entry, callback= self.hide_entry_cb)
+        self.cloud_menu_handler.setCheckState(local_delete, MenuHandler.UNCHECKED)
+        self.cloud_menu[local_delete] = local_top
 
-        local_kill = self.menu_handler.insert( "Delete Cloud", parent = top_level_entry, top_level_entry, self.kill_entry_cb)
+        local_kill = self.cloud_menu_handler.insert( "Delete Cloud", parent = top_level_entry, callback= self.kill_entry_cb)
         #We'll need this for the callback
-        self.cloudmenu[local_kill] = local_top
+        self.cloud_menu[local_kill] = local_top
         
 
     def hide_entry_cb(self, menu_entry_feedback):
@@ -107,10 +107,24 @@ class StablePointcloudSnapshotter(object):
         self.snapshot_list = [self.StableCloud(stable_frame, cloud_ind, self.tf_listener, self.tf_broadcaster) for cloud_ind in xrange(max_clouds)]
         self.cloud_topic_name = cloud_topic_name
 
-        self.menu_handler = MenuHandler()
-        self.cloudmenu = dict()
-        self.interactive_marker_server
-
+        self.cloud_menu_handler = MenuHandler()
+        self.cloud_menu = dict()
+        self.interactive_marker_server = InteractiveMarkerServer("nimbus")
+        test_mark = Marker()
+        test_mark.type = Marker.SPHERE
+        test_mark.scale.x = test_mark.scale.y = test_mark.scale.z = .5
+        test_mark.color.a = 1
+        test_int_mark_cont = InteractiveMarkerControl()
+        test_int_mark_cont.always_visible = True
+        test_int_mark_cont.interaction_mode = InteractiveMarkerControl.BUTTON
+        test_int_mark_cont.markers.append(test_mark)
+        test_int_mark = InteractiveMarker()
+        test_int_mark.header.frame_id = "/leftFoot"
+        test_int_mark.scale = 1
+        test_int_mark.controls.append(test_int_mark_cont)
+        self.interactive_marker_server.insert(test_int_mark)
+        self.interactive_marker_server.applyChanges()
+        self.cloud_menu_handler.apply(self.interactive_marker_server, "nimbus_1")
 
 
     def snapshot_callback(self, msg):
