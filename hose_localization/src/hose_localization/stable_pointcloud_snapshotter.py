@@ -37,7 +37,37 @@ class StablePointcloudSnapshotter(object):
             self.cloud_publisher.unregister()
             self.cloud_publisher = []
 
+
+    def add_pointcloud_to_menu(self, snapshot_number):
+        top_level_entry = self.menu_handler.insert( "Snapshot %d"%(snapshot_number) )
+        #fixme make this a checkbox
+        self.menu_handler.insert( "Hide", parent = top_level_entry, top_level_entry, self.hide_entry_cb)
+        #FIXME 
         
+
+    def hide_entry_cb(self, menu_entry_feedback):
+        def get_marker_name_from_entry(self, menu_entry):
+            pass
+        def hide_marker(menu_entry_feedback):
+            pass
+        def unhide_marker(menu_entry_feedback):
+            pass
+        #marker_name = get_marker_name_from_entry(self, menu_entry)
+        #marker = get_marker_from_server(server, marker_name)
+
+        #self.hidden_markers.append(marker)
+        #self.interactive_marker_server.hide(marker)
+
+        #hiden = get_checkmark_state(menu_entry)
+        #if hiden:
+            #unhide_marker(menu_entry_feedback)
+        #else:
+             #hide_marker(menu_entry_feedback)
+               
+        
+    
+
+
 
 
     def __init__(self, stable_frame = 'leftFoot', max_clouds = 1, cloud_topic_name = '', tf_listener = [], tf_broadcaster = []):
@@ -50,6 +80,10 @@ class StablePointcloudSnapshotter(object):
         self.snapshot_delete_subscriber = rospy.Subscriber('delete_snapshot', std_msgs.msg.Int32, self.delete_snapshot_callback)
         self.snapshot_list = [self.StableCloud(stable_frame, cloud_ind, self.tf_listener, self.tf_broadcaster) for cloud_ind in xrange(max_clouds)]
         self.cloud_topic_name = cloud_topic_name
+
+        self.menu_handler
+        self.interactive_marker_server
+
 
 
     def snapshot_callback(self, msg):
