@@ -72,6 +72,7 @@ class GraspableCylinderMarker(MoveableButtonMarker):
         self.hand_pose_publishers = { self.status.LEFT: rospy.Publisher(self.left_pose_topic, PoseStamped) , 
                                self.status.RIGHT: rospy.Publisher(self.right_pose_topic, PoseStamped)       
                                }
+        self.point_sub = rospy.Subscriber('/clicked_point',PointStamped, self.set_position)
         self.tf_broadcaster = tf.TransformBroadcaster()
         self.tf_listener = tf.TransformListener()
         self.snapshotter = stable_pointcloud_snapshotter.StablePointcloudSnapshotter(frame, 1,'/snapshot_input_cloud', self.tf_listener, self.tf_broadcaster)
@@ -84,8 +85,14 @@ class GraspableCylinderMarker(MoveableButtonMarker):
         MoveableButtonMarker.create_marker(self)
         self.int_marker.name += "_graspable_cylinder"
 
-
-
+    
+        
+    def set_position(self, point_stamped_msg):
+        pose = PoseStamped()
+        pose.header = point_stamped_msg.header
+        pose.pose.position = point_stamped_msg.point
+        self.set_pose(pose)
+        
     def make_object_marker(self):
         base_control = InteractiveMarkerControl()
         base_control.orientation_mode = InteractiveMarkerControl.FIXED
