@@ -30,6 +30,12 @@ from transformation_helper import *
 import numpy
 from moveable_button_marker import MoveableButtonMarker
 import ipdb
+import math
+
+def rotation_from_quaternion(q):    
+    m = tf.transformations.quaternion_matrix(q)
+    angle, direc, point = tf.transformations.rotation_from_matrix(m)
+    return [angle, direc]
 
 class GripperMarker (MoveableButtonMarker):
     def __init__(self, marker_namespace, is_left_side = True, 
@@ -92,10 +98,14 @@ class GripperMarker (MoveableButtonMarker):
                 other_basis_tf = self.tf_listener.lookupTransform( tf_name, self.marker_target_frame, rospy.Time(0))
                 
                 other_euler = tf.transformations.euler_from_quaternion(other_basis_tf[1])
+                other_euler_deg = [angle*180.0/math.pi for angle in other_euler]
+                other_angle_axis = rotation_from_quaternion(other_basis_tf[1])
+                other_angle_axis_str = 'angle: %.3f axis: %.3f %.3f %.3f'%(other_angle_axis[0]/math.pi*180.0, other_angle_axis[1][0],other_angle_axis[1][1], other_angle_axis[1][2])
                 xyz_str = "[" + ",".join(["%.3f"%(num) for num in other_basis_tf[0]]) +"]"
-                euler_str = "[" + ",".join(["%.3f"%(num) for num in other_euler]) + "]"
-                self.int_marker.description ="%s\n Frame: %s XYZ - %s: Euler - %s "%(self.int_marker.description, 
-                                                                                     tf_name, xyz_str, euler_str)
+                euler_str = "[" + ",".join(["%.3f"%(num) for num in other_euler_deg]) + "]"
+                self.int_marker.description ="%s\n Frame: %s XYZ - %s: Euler - %s Angle Axis - %s"%(self.int_marker.description, 
+                                                                                     tf_name, xyz_str, euler_str, other_angle_axis_str)
+                
                 
         
 
