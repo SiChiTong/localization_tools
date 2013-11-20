@@ -31,13 +31,16 @@ class StablePointcloudSnapshotter(object):
         self.cloud_menu_handler.setCheckState(local_trans, MenuHandler.UNCHECKED)
         self.cloud_menu[local_trans] = local_top
 
-        local_move = self.cloud_menu_handler.insert( "Move", parent = local_top, callback= self.hide_entry_cb)
+        local_move = self.cloud_menu_handler.insert( "Move", parent = local_top, callback= self.move_cb)
         self.cloud_menu_handler.setCheckState(local_trans, MenuHandler.UNCHECKED)
+        self.cloud_menu_handler.setCheckState(local_move, MenuHandler.UNCHECKED)
         self.cloud_menu[local_move] = local_top
+        self.alignment_marker = []
+        self.moving_marker_list = []
 
-        local_delete = self.cloud_menu_handler.insert( "Delete Points", parent = local_top, callback= self.delete_cb)
-        self.cloud_menu_handler.setCheckState(local_delete, MenuHandler.UNCHECKED)
-        self.cloud_menu[local_delete] = local_top
+        #local_delete = self.cloud_menu_handler.insert( "Delete Points", parent = local_top, callback= self.delete_cb)
+        #self.cloud_menu_handler.setCheckState(local_delete, MenuHandler.UNCHECKED)
+        #self.cloud_menu[local_delete] = local_top
 
         local_kill = self.cloud_menu_handler.insert( "Delete Cloud", parent = local_top, callback=self.delete_cb)
         #We'll need this for the callback
@@ -51,7 +54,7 @@ class StablePointcloudSnapshotter(object):
         def hide_marker(menu_entry_feedback):
             marker_name = self.get_marker_name_from_entry(menu_entry_feedback.menu_entry_id)
             
-            markers = self.remove_marker(marker_name)
+            markers = self.remove_marker(marker_name, self.control_marker)
             self.hidden_markers += markers
             self.cloud_menu_handler.setCheckState(menu_entry_feedback.menu_entry_id, MenuHandler.CHECKED)
 
@@ -120,7 +123,9 @@ class StablePointcloudSnapshotter(object):
 
     def delete_cb(self, menu_entry_feedback):
         marker_name = self.get_marker_name_from_entry(menu_entry_feedback.menu_entry_id)
-        marker = self.remove_marker(marker_name)
+        marker = self.remove_marker(marker_name, self.control_marker)
+        if not marker:
+            marker = self.remove_marker(marker_name, self.alignment_marker)
         self.cloud_menu_handler.setVisible(self.cloud_menu[menu_entry_feedback.menu_entry_id], False)
         self.reinitialize_server()
 
@@ -154,11 +159,102 @@ class StablePointcloudSnapshotter(object):
     def feedback(self, msg):
         pass
 
+
+    def make_alignment_marker(self):
+        def create_axis_control(axis, interaction_mode, base_name):
+            control = InteractiveMarkerControl()
+            control.interaction_mode = interaction_mode
+            control.orientation_mode = InteractiveMarkerControl.INHERIT
+            control.always_visible = False
+            control.name = base_name + axis
+            control.orientation.w = 1.0
+            control.orientation.x = 0.0
+            control.orientation.y = 0.0
+            control.orientation.z = 0.0
+            
+            setattr(control.orientation, axis, 1.0)
+            self.alignment_marker.controls.append(control)
+            return control
+        axes=['x','y','z']
+        self.alignment_marker = InteractiveMarker()
+        self.alignment_marker.name="alignment_marker"
+        self.alignment_marker.header.frame_id = self.control_marker.header.frame_id
+        self.alignment_marker.pose = self.control_marker.pose
+
+        base_control = InteractiveMarkerControl()
+        base_control.always_visible = True
+        base_control.interaction_mode = InteractiveMarkerControl.MENU
+        
+        alignment_base_marker = Marker()
+        alignment_base_marker.type = Marker.SPHERE
+        self.alignment_marker.scale = .2
+        alignment_base_marker.scale.x = alignment_base_marker.scale.y = alignment_base_marker.scale.z = .2
+        alignment_base_marker.color.a = 1
+        alignment_base_marker.color.g = 1
+        base_control.markers.append(alignment_base_marker)
+        self.alignment_marker.controls.append(base_control)
+
+        for axis in axes:
+            translation_control = create_axis_control(axis, InteractiveMarkerControl.MOVE_AXIS,'translate')
+            rotation_control = create_axis_control(axis, InteractiveMarkerControl.ROTATE_AXIS,'rotate')
+            
+        return 
+
+
+    def move_cb(self, menu_entry_feedback):        
+        def move_marker(menu_entry_feedback):
+            marker_name = self.get_marker_name_from_entry(menu_entry_feedback.menu_entry_id)
+            
+            markers = self.remove_marker(marker_name, self.control_marker)
+            self.moving_marker_list += markers
+            self.cloud_menu_handler.setCheckState(menu_entry_feedback.menu_entry_id, MenuHandler.CHECKED)
+            if not self.moving_marker_list:
+                return
+            
+            if not self.alignment_marker:
+                self.make_alignment_marker() 
+            
+            self.alignment_marker.controls[0].markers += markers
+            
+
+        def static_marker(menu_entry_feedback):
+            markers = []
+            print "alignment_marker pose"
+            print self.alignment_marker.pose
+            for control in self.alignment_marker.controls:
+                for marker in control.markers:
+                    print "pretransform_pose"
+                    print marker.pose
+                    alignment_marker_pose = ComposePoses(self.alignment_marker.pose, InvertPose(self.control_marker.pose))
+                    
+                    marker.pose = ComposePoses(alignment_marker_pose , marker.pose)
+                    print "post_transform_pose"
+                    print marker.pose
+                    
+                    markers.append(marker)
+                    
+            marker_name = self.get_marker_name_from_entry(menu_entry_feedback.menu_entry_id)
+            marker = [marker for marker in markers if marker.text == marker_name]            
+            if marker:
+                self.moving_marker_list = [moving_marker for moving_marker in self.moving_marker_list if moving_marker.text != marker_name]
+                self.remove_marker(marker_name, self.alignment_marker)
+                self.control_marker.controls[0].markers += marker                
+                self.cloud_menu_handler.setCheckState(menu_entry_feedback.menu_entry_id, MenuHandler.UNCHECKED)
+            if not self.moving_marker_list:
+                self.alignment_marker = []
+            
+            
+        if self.cloud_menu_handler.getCheckState(menu_entry_feedback.menu_entry_id) == MenuHandler.UNCHECKED:
+            move_marker(menu_entry_feedback)
+        else:
+            static_marker(menu_entry_feedback)
+        self.reinitialize_server() 
+
     def make_control_marker(self):
         
         control_mark = InteractiveMarker()
         control_mark.header.frame_id = "/leftFoot"
-        control_mark.scale = 1
+        control_mark.scale = .2
         control_mark.name="snapshot_int_marker"
         control_mark.pose.position.z = 2
         
@@ -168,8 +264,8 @@ class StablePointcloudSnapshotter(object):
 
         test_mark = Marker()
         test_mark.type = Marker.SPHERE
-        test_mark.scale.x = test_mark.scale.y = test_mark.scale.z = .5
-        test_mark.color.a = 1
+        test_mark.scale.x = test_mark.scale.y = test_mark.scale.z = .1
+        test_mark.color.a = .8
         
         test_int_mark_cont.markers.append(test_mark)
         control_mark.controls.append(test_int_mark_cont)
@@ -226,9 +322,10 @@ class StablePointcloudSnapshotter(object):
 
 
 
-    def remove_marker(self, marker_name):        
+    def remove_marker(self, marker_name, int_marker):        
         found_markers = []
         found_marker_inds = []
+
         for i in xrange(len(self.control_marker.controls[0].markers)):
             marker = self.control_marker.controls[0].markers[i]
             if marker.text==marker_name:
@@ -244,8 +341,15 @@ class StablePointcloudSnapshotter(object):
         self.interactive_marker_server.clear()
         
         self.interactive_marker_server.insert(self.control_marker, self.feedback)
+        if self.moving_marker_list:
+            
+            self.interactive_marker_server.insert(self.alignment_marker, self.feedback)
+            self.cloud_menu_handler.apply(self.interactive_marker_server, "alignment_marker")
+            
         self.cloud_menu_handler.apply(self.interactive_marker_server, "snapshot_int_marker")
         self.interactive_marker_server.applyChanges()
+        
+
         
     def delete_snapshot_callback(self, snapshot_ind_msg):
         self.delete_snapshot(snapshot_ind_msg.data)
