@@ -23,11 +23,11 @@ class StablePointcloudSnapshotter(object):
         self.cloud_menu_handler.setCheckState(local_hide, MenuHandler.UNCHECKED )
         self.cloud_menu[local_hide] = local_top
 
-        local_highlight = self.cloud_menu_handler.insert( "Highlight", parent = local_top, callback= self.hide_entry_cb)
+        local_highlight = self.cloud_menu_handler.insert( "Highlight", parent = local_top, callback= self.highlight_cb)
         self.cloud_menu_handler.setCheckState(local_highlight, MenuHandler.UNCHECKED)
         self.cloud_menu[local_highlight] = local_top
 
-        local_trans = self.cloud_menu_handler.insert( "Set Transparency", parent = local_top, callback= self.hide_entry_cb)
+        local_trans = self.cloud_menu_handler.insert( "Set Transparency", parent = local_top, callback= self.transparency_cb)
         self.cloud_menu_handler.setCheckState(local_trans, MenuHandler.UNCHECKED)
         self.cloud_menu[local_trans] = local_top
 
@@ -35,23 +35,21 @@ class StablePointcloudSnapshotter(object):
         self.cloud_menu_handler.setCheckState(local_trans, MenuHandler.UNCHECKED)
         self.cloud_menu[local_move] = local_top
 
-        local_delete = self.cloud_menu_handler.insert( "Delete Points", parent = local_top, callback= self.hide_entry_cb)
+        local_delete = self.cloud_menu_handler.insert( "Delete Points", parent = local_top, callback= self.delete_cb)
         self.cloud_menu_handler.setCheckState(local_delete, MenuHandler.UNCHECKED)
         self.cloud_menu[local_delete] = local_top
 
-        local_kill = self.cloud_menu_handler.insert( "Delete Cloud", parent = local_top, callback= self.hide_entry_cb)
+        local_kill = self.cloud_menu_handler.insert( "Delete Cloud", parent = local_top, callback=self.delete_cb)
         #We'll need this for the callback
         self.cloud_menu[local_kill] = local_top
         return local_top
         
-
-    def hide_entry_cb(self, menu_entry_feedback):
-        def get_marker_name_from_entry(menu_entry_id):
+    def get_marker_name_from_entry(self, menu_entry_id):
             return self.cloud_menu_handler.getTitle(self.cloud_menu[menu_entry_id])
 
-
+    def hide_entry_cb(self, menu_entry_feedback):        
         def hide_marker(menu_entry_feedback):
-            marker_name = get_marker_name_from_entry(menu_entry_feedback.menu_entry_id)
+            marker_name = self.get_marker_name_from_entry(menu_entry_feedback.menu_entry_id)
             
             markers = self.remove_marker(marker_name)
             self.hidden_markers += markers
@@ -59,7 +57,7 @@ class StablePointcloudSnapshotter(object):
 
 
         def unhide_marker(menu_entry_feedback):
-            marker_name = get_marker_name_from_entry(menu_entry_feedback.menu_entry_id)
+            marker_name = self.get_marker_name_from_entry(menu_entry_feedback.menu_entry_id)
             marker = [marker for marker in self.hidden_markers if marker.text == marker_name]
             if marker:
                 self.control_marker.controls[0].markers += marker                
@@ -72,6 +70,59 @@ class StablePointcloudSnapshotter(object):
             unhide_marker(menu_entry_feedback)
         self.reinitialize_server()  
 
+
+    def switch_checkbox(self, menu_entry_feedback):
+        if self.cloud_menu_handler.getCheckState(menu_entry_feedback.menu_entry_id) ==  MenuHandler.UNCHECKED:
+            self.cloud_menu_handler.setCheckState(menu_entry_feedback.menu_entry_id, MenuHandler.CHECKED)
+            return 1
+        else:
+            self.cloud_menu_handler.setCheckState(menu_entry_feedback.menu_entry_id, MenuHandler.UNCHECKED)
+            return 0
+            
+        
+
+    def transparency_cb(self, menu_entry_feedback):        
+        def set_cloud_transparency(menu_entry_feedback, alpha):
+            marker_name = self.get_marker_name_from_entry(menu_entry_feedback.menu_entry_id)
+            
+            marker = [marker for marker in self.control_marker.controls[0].markers if marker.text == marker_name][0]
+            for i in xrange(len(marker.colors)):
+                marker.colors[i].a = alpha
+                
+            
+        if self.cloud_menu_handler.getCheckState(menu_entry_feedback.menu_entry_id) == MenuHandler.UNCHECKED:
+            set_cloud_transparency(menu_entry_feedback, .2)
+        else:
+            set_cloud_transparency(menu_entry_feedback, 1)
+        self.switch_checkbox(menu_entry_feedback)
+
+        self.reinitialize_server()
+
+
+    def highlight_cb(self, menu_entry_feedback):
+        def set_cloud_highlight(menu_entry_feedback, highlight):
+            marker_name = self.get_marker_name_from_entry(menu_entry_feedback.menu_entry_id)
+            
+            marker = [marker for marker in self.control_marker.controls[0].markers if marker.text == marker_name][0]
+            for i in xrange(len(marker.colors)):
+                if highlight:
+                    marker.colors[i].g = 1
+                else:
+                    marker.colors[i].g = marker.colors[i].r
+            
+        if self.cloud_menu_handler.getCheckState(menu_entry_feedback.menu_entry_id) == MenuHandler.UNCHECKED:
+            set_cloud_highlight(menu_entry_feedback, True)
+        else:
+            set_cloud_highlight(menu_entry_feedback, False)
+        self.switch_checkbox(menu_entry_feedback)
+
+        self.reinitialize_server()
+
+    def delete_cb(self, menu_entry_feedback):
+        marker_name = self.get_marker_name_from_entry(menu_entry_feedback.menu_entry_id)
+        marker = self.remove_marker(marker_name)
+        self.cloud_menu_handler.setVisible(self.cloud_menu[menu_entry_feedback.menu_entry_id], False)
+        self.reinitialize_server()
 
     def __init__(self, stable_frame = 'leftFoot', max_clouds = 1, cloud_topic_name = '', tf_listener = [], tf_broadcaster = []):
         self.tf_listener = tf_listener
@@ -172,6 +223,8 @@ class StablePointcloudSnapshotter(object):
         marker.text="Snapshot %d"%(self.snapshot_num)
         self.snapshot_num += 1
         self.reinitialize_server()
+
+
 
     def remove_marker(self, marker_name):        
         found_markers = []
