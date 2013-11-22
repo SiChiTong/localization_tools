@@ -19,6 +19,14 @@
       <remap from="cloud_pcd" to="/rgbd_longrange/depth/points_xyzrgb"/>
     </node>
 
-    <include file="$(find hose_localization)/launch/LaunchHoseMarkers.launch" />
+    <include file="$(find hose_localization)/launch/LaunchHoseMarkers.launch" >
+    	     <arg name="output" value="screen" />
+    </include>
+   <node name="octomap_server" type="octomap_server_node" pkg="octomap_server">
+   	 <remap from="cloud_in" to="/rgbd_longrange/depth/points_xyzrgb"/>
+	 <param name="frame_id" value = "/leftFoot"/>
+	 <param name="base_frame_id" value = "/leftFoot"/>
+    </node>		     
+	 
 
 </launch>
