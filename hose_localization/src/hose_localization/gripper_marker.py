@@ -46,14 +46,18 @@ class GripperMarker (MoveableButtonMarker):
         if is_left_side:
             #self.marker_mesh_file = "package://drchubo_v3/meshes/convhull_LWR_merged.stl"
             self.side = 'left'
-        self.marker_frame = "/%s_gripper/Body_%sWR"%(self.side, self.side[0].upper())
+        self.hand_base_frame = "/Body_%sWR"%(self.side[0].upper())
+        self.marker_frame = "/%s_gripper%s"%(self.side,self.hand_base_frame )
         self.marker_target_frame="/%s_gripper/%sPalm"%(self.side, self.side)
         self.other_frames = ['/Body_TSY','/%sPalm'%(self.side)]
         self.tf_listener = tf.TransformListener()
         self.tf_broadcaster = tf.TransformBroadcaster()
+        self.update_menu("snap to gripper",self.align_to_gripper,[])
+        self.update_menu("send_pose",self.publish_pose,[])
         
 
-
+        self.pose_publisher = rospy.Publisher(self.side + "_gripper_pose", PoseStamped)
+        
     def make_object_marker(self):
         base_control = InteractiveMarkerControl()
         base_control.orientation_mode = InteractiveMarkerControl.FIXED
@@ -86,7 +90,7 @@ class GripperMarker (MoveableButtonMarker):
         MoveableButtonMarker.create_marker(self, .3)         
         self.int_marker.name=self.side + "_gripper_marker"
         
-    def update(self):
+    def update(self):        
         #MoveableButtonMarker.update(self)
         tfp = ComponentsFromTransform(PoseToTransform(self.int_marker.pose))
         self.tf_broadcaster.sendTransform(tfp[0],tfp[1], rospy.Time().now(), self.marker_frame, self.int_marker.header.frame_id )
@@ -106,8 +110,18 @@ class GripperMarker (MoveableButtonMarker):
                 self.int_marker.description ="%s\n Frame: %s XYZ - %s: Euler - %s Angle Axis - %s"%(self.int_marker.description, 
                                                                                      tf_name, xyz_str, euler_str, other_angle_axis_str)
                 
-                
+    def align_to_gripper(self):
         
+        if self.tf_listener.canTransform(self.hand_base_frame,
+                                         self.marker_pose_stamped.header.frame_id,
+                                         rospy.Time(0)):            
+            gripper_tf = self.tf_listener.lookupTransform(self.marker_pose_stamped.header.frame_id,
+                                                          self.hand_base_frame, rospy.Time(0))
+            self.set_pose(PoseFromTransform(TransformFromComponents(*gripper_tf)))
+            
+            
+    def publish_pose(self):        
+        self.pose_publisher.publish(self.marker_pose_stamped)
 
 
 if __name__ == '__main__':
