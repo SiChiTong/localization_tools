@@ -11,7 +11,7 @@ import ipdb
 from interactive_markers.interactive_marker_server import *
 from interactive_markers.menu_handler import *
 from pointcloud2 import *
-
+import std_srvs.srv
 
 class AddedCloud(object):
     def __init__(self, pointcloud, start_index, end_index):
@@ -54,6 +54,7 @@ class StablePointcloudSnapshotter(object):
         self.cloud_menu[local_move] = local_top
         self.alignment_marker = []
         self.moving_marker_list = []
+        
 
         #local_delete = self.cloud_menu_handler.insert( "Delete Points", parent = local_top, callback= self.delete_cb)
         #self.cloud_menu_handler.setCheckState(local_delete, MenuHandler.UNCHECKED)
@@ -141,6 +142,8 @@ class StablePointcloudSnapshotter(object):
     def delete_cb(self, menu_entry_feedback):
         marker_name = self.get_marker_name_from_entry(menu_entry_feedback.menu_entry_id)
         marker = self.remove_marker(marker_name, self.control_marker)
+        ind = int(marker_name.split(' ')[1])
+        self.pc_marker_dict.pop(ind,[])
         if not marker:
             marker = self.remove_marker(marker_name, self.alignment_marker)
         self.cloud_menu_handler.setVisible(self.cloud_menu[menu_entry_feedback.menu_entry_id], False)
@@ -152,17 +155,22 @@ class StablePointcloudSnapshotter(object):
 
 
         self.cloud_topic_name = cloud_topic_name
+        
         self.stable_frame = stable_frame
         self.max_clouds = max_clouds
         self.snapshot_request_subscriber = rospy.Subscriber('snapshot_cloud', std_msgs.msg.Empty, self.snapshot_callback)
         self.snapshot_delete_subscriber = rospy.Subscriber('delete_snapshot', std_msgs.msg.Int32, self.delete_snapshot_callback)
         self.pointloud_subscriber = rospy.Subscriber(cloud_topic_name, PointCloud2, self.pointcloud_callback)
+        self.point_cloud_publisher = rospy.Publisher('/output_cloud',PointCloud2)
 
         self.last_pointcloud = []
 
         self.cloud_menu_handler = MenuHandler()
         self.cloud_menu_handler.insert("snapshot_server_menu")
+        
         self.cloud_menu_handler.insert("Add Snapshot", callback= self.snapshot_callback )
+        self.cloud_menu_handler.insert("Publish all pointclouds", callback = self.publish_pointclouds)
+        
         self.cloud_menu = dict()
         self.interactive_marker_server = InteractiveMarkerServer("snapshot_int_marker_server")
         self.control_marker = self.make_control_marker()
@@ -171,7 +179,7 @@ class StablePointcloudSnapshotter(object):
         self.interactive_marker_server.applyChanges()
         self.snapshot_num = 0
         self.hidden_markers = []
-
+        self.pc_marker_dict = {}
 
     def feedback(self, msg):
         pass
@@ -217,6 +225,33 @@ class StablePointcloudSnapshotter(object):
             
         return 
 
+
+    def publish_pointclouds(self, menu_entry_feedback):
+        rospy.ServiceProxy('/octomap_server/reset', std_srvs.srv.Empty)()  
+        for marker in self.control_marker.controls[0].markers:
+            marker_ind = []
+            pc_msg = []
+            original_frame = ''
+            try:
+                marker_ind = int(marker.text.split(' ')[1])
+                pc_msg, original_frame = self.pc_marker_dict[marker_ind]
+            except:
+                continue
+            
+            if pc_msg is not []:
+                marker_name = '/' + marker.text.replace(' ','_')
+                current_transform = self.tf_listener.lookupTransform( original_frame, marker.header.frame_id , rospy.Time(0))
+                
+                tfp = ComponentsFromTransform(ComposeTransforms(InvertTransform(TransformFromComponents(*current_transform)),PoseToTransform(marker.pose)))
+                if tfp[1] == [0,0,0,0]:
+                    tfp[1] = [0,0,0,1]
+                pc_msg.header.stamp = rospy.Time.now()
+                self.tf_broadcaster.sendTransform(tfp[0],tfp[1], rospy.Time().now(), marker_name, marker.header.frame_id ) 
+                pc_msg.header.frame_id = marker_name
+                #ipdb.set_trace()
+                self.point_cloud_publisher.publish(pc_msg)
+            else:
+                ipdb.set_trace()
 
     def move_cb(self, menu_entry_feedback):        
         def move_marker(menu_entry_feedback):
@@ -314,9 +349,13 @@ class StablePointcloudSnapshotter(object):
 
 
     def pointcloud_callback(self, msg):
-        self.last_pointcloud =  msg
-        self.tf_listener.waitForTransform(self.stable_frame, msg.header.frame_id, rospy.Time(), rospy.Duration(4.0))
-        self.tf_listener.waitForTransform(self.stable_frame, msg.header.frame_id, rospy.Time.now(), rospy.Duration(4.0))
+        
+        try:
+            self.tf_listener.waitForTransform(self.stable_frame, msg.header.frame_id, rospy.Time(), rospy.Duration(4.0))
+            self.tf_listener.waitForTransform(self.stable_frame, msg.header.frame_id, rospy.Time.now(), rospy.Duration(4.0))
+        except:
+            return
+        self.last_pointcloud =  msg    
         self.last_pointcloud_tran = self.tf_listener.asMatrix(self.stable_frame, msg.header)
 
     def snapshot_callback(self, msg):
@@ -331,10 +370,12 @@ class StablePointcloudSnapshotter(object):
         marker = self.convert_pointcloud2_to_marker(self.last_pointcloud, self.last_pointcloud_tran)
         self.add_pointcloud_to_menu(self.snapshot_num)
         print "made point cloud marker"
+        self.pc_marker_dict[self.snapshot_num] = [self.last_pointcloud, self.last_pointcloud.header.frame_id]
         self.last_pointcloud = []
         self.control_marker.controls[0].markers.append(marker)        
         
         marker.text="Snapshot %d"%(self.snapshot_num)
+        
         self.snapshot_num += 1
         self.reinitialize_server()
 
@@ -371,6 +412,8 @@ class StablePointcloudSnapshotter(object):
         found_marker_inds.reverse()
         for i in found_marker_inds:
             self.control_marker.controls[0].markers.pop(i)
+            
+            
         return found_markers
         
 
