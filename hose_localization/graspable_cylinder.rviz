@@ -14,6 +14,7 @@ Panels:
         - /InteractiveMarkers3
         - /InteractiveMarkers4
         - /RobotModel3
+        - /PointCloud21
       Splitter Ratio: 0.5
     Tree Height: 648
   - Class: rviz/Selection
@@ -552,6 +553,8 @@ Visualization Manager:
           Value: true
         /Body_Torso:
           Value: true
+        /button_marker_graspable_cylinder:
+          Value: true
         /hubo_base:
           Value: true
         /leftFoot:
@@ -575,6 +578,8 @@ Visualization Manager:
         /left_gripper/Body_LF32:
           Value: true
         /left_gripper/Body_LF33:
+          Value: true
+        /left_gripper/Body_LWP:
           Value: true
         /left_gripper/Body_LWR:
           Value: true
@@ -609,6 +614,8 @@ Visualization Manager:
         /right_gripper/Body_RF42:
           Value: true
         /right_gripper/Body_RF43:
+          Value: true
+        /right_gripper/Body_RWP:
           Value: true
         /right_gripper/Body_RWR:
           Value: true
@@ -676,40 +683,44 @@ Visualization Manager:
                     /Body_LAP:
                       /Body_LAR:
                         /leftFoot:
-                          /left_gripper/Body_LWR:
-                            /left_gripper/Body_LF11:
-                              /left_gripper/Body_LF12:
-                                /left_gripper/Body_LF13:
-                                  {}
-                            /left_gripper/Body_LF21:
-                              /left_gripper/Body_LF22:
-                                /left_gripper/Body_LF23:
-                                  {}
-                            /left_gripper/Body_LF31:
-                              /left_gripper/Body_LF32:
-                                /left_gripper/Body_LF33:
-                                  {}
-                            /left_gripper/leftPalm:
-                              {}
-                          /right_gripper/Body_RWR:
-                            /right_gripper/Body_RF11:
-                              /right_gripper/Body_RF12:
-                                /right_gripper/Body_RF13:
-                                  {}
-                            /right_gripper/Body_RF21:
-                              /right_gripper/Body_RF22:
-                                /right_gripper/Body_RF23:
-                                  {}
-                            /right_gripper/Body_RF31:
-                              /right_gripper/Body_RF32:
-                                /right_gripper/Body_RF33:
-                                  {}
-                            /right_gripper/Body_RF41:
-                              /right_gripper/Body_RF42:
-                                /right_gripper/Body_RF43:
-                                  {}
-                            /right_gripper/rightPalm:
-                              {}
+                          /button_marker_graspable_cylinder:
+                            {}
+                          /left_gripper/Body_LWP:
+                            /left_gripper/Body_LWR:
+                              /left_gripper/Body_LF11:
+                                /left_gripper/Body_LF12:
+                                  /left_gripper/Body_LF13:
+                                    {}
+                              /left_gripper/Body_LF21:
+                                /left_gripper/Body_LF22:
+                                  /left_gripper/Body_LF23:
+                                    {}
+                              /left_gripper/Body_LF31:
+                                /left_gripper/Body_LF32:
+                                  /left_gripper/Body_LF33:
+                                    {}
+                              /left_gripper/leftPalm:
+                                {}
+                          /right_gripper/Body_RWP:
+                            /right_gripper/Body_RWR:
+                              /right_gripper/Body_RF11:
+                                /right_gripper/Body_RF12:
+                                  /right_gripper/Body_RF13:
+                                    {}
+                              /right_gripper/Body_RF21:
+                                /right_gripper/Body_RF22:
+                                  /right_gripper/Body_RF23:
+                                    {}
+                              /right_gripper/Body_RF31:
+                                /right_gripper/Body_RF32:
+                                  /right_gripper/Body_RF33:
+                                    {}
+                              /right_gripper/Body_RF41:
+                                /right_gripper/Body_RF42:
+                                  /right_gripper/Body_RF43:
+                                    {}
+                              /right_gripper/rightPalm:
+                                {}
             /Body_RHY:
               /Body_RHR:
                 /Body_RHP:
@@ -850,6 +861,11 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        Body_LWP:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         Body_LWR:
           Alpha: 1
           Show Axes: false
@@ -971,6 +987,11 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        Body_RWP:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         Body_RWR:
           Alpha: 1
           Show Axes: false
@@ -990,6 +1011,34 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: ""
+      Decay Time: 0
+      Enabled: true
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: PointCloud2
+      Position Transformer: ""
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.01
+      Style: Flat Squares
+      Topic: /octomap_input
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -1020,10 +1069,10 @@ Visualization Manager:
         Z: 0.82752
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.064797
+      Pitch: 0.209797
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 6.02136
+      Yaw: 5.22636
     Saved: ~
 Window Geometry:
   Displays:
@@ -1041,5 +1090,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1298
-  X: 498
+  X: 491
   Y: 74
