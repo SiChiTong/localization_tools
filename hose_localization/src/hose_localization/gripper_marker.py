@@ -53,6 +53,7 @@ class GripperMarker (MoveableButtonMarker):
         self.tf_listener = tf.TransformListener()
         self.tf_broadcaster = tf.TransformBroadcaster()
         self.update_menu("snap to gripper",self.align_to_gripper,[])
+        self.update_menu("snap to other gripper",self.align_to_other_gripper,[])
         self.update_menu("send_pose",self.publish_pose,[])
         
 
@@ -118,6 +119,23 @@ class GripperMarker (MoveableButtonMarker):
             gripper_tf = self.tf_listener.lookupTransform(self.marker_pose_stamped.header.frame_id,
                                                           self.hand_base_frame, rospy.Time(0))
             self.set_pose(PoseFromTransform(TransformFromComponents(*gripper_tf)))
+
+    def align_to_other_gripper(self):
+        other_gripper = 'left'
+        if self.marker_namespace.find('other_gripper') >= 0:
+            other_gripper = 'right'
+        other_gripper_marker_frame = "/%s_gripper/%sWP"%(other_gripper, other_gripper[0].upper())
+            
+        if self.tf_listener.canTransform(self.marker_pose_stamped.header.frame_id,
+                                         other_gripper_marker_frame,
+                                         rospy.Time(0)):            
+            gripper_tf = self.tf_listener.lookupTransform(other_gripper_marker_frame,
+                                                          self.marker_pose_stamped.header.frame_id,
+                                                           rospy.Time(0))
+            gripper_pose = PoseFromTransform(TransformFromComponents(*gripper_tf))
+            gripper_pose.position.z += .2
+            self.set_pose(gripper_pose)
+            
             
             
     def publish_pose(self):        
