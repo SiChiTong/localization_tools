@@ -33,6 +33,7 @@
     <node name="graspable_cylinder" pkg="hose_localization" type="graspable_cylinder_marker.py" output="screen" >
         <remap from="/tf" to="$(arg remapped_tf)" /> 			
         <remap from="/snapshot_input_cloud" to="$(arg input_point_cloud)" />
+	<remap from="/output_cloud" to="/octomap_input"/>
     </node> 
 
 </launch>
