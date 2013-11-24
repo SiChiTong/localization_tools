@@ -1,0 +1,4 @@
+<launch>
+<node name="orrosplanner" type="armplanning_openrave.py" pkg="orrosplanning" args="--scene=/home/jweisz/test_ws/src/drchubo/drchubo_v3/robots/drchubo_v3_no_solvers.robot.xml --mapframe=/leftFoot --collision_map collision_map_out" output="screen">
+</node>
+</launch>
