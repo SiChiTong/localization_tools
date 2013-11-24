@@ -7,10 +7,27 @@ import rospy
 from transformation_helper import *
 import tf
 import IPython
-import pdb
+import ipdb
 from interactive_markers.interactive_marker_server import *
 from interactive_markers.menu_handler import *
 from pointcloud2 import *
+
+
+class AddedCloud(object):
+    def __init__(self, pointcloud, start_index, end_index):
+        self.pointcloud = pointcloud
+        self.start_index = start_index
+        self.end_index = end_index
+
+    def shift_cloud(self, start_shift, end_shift):
+        shift_len = end_shift - start_shift
+        if start_shift >= self.end_index:
+            return False
+        self.start_index -= shift_len
+        self.end_index -= shift_len
+        return True
+
+        
 
 class StablePointcloudSnapshotter(object):
 
@@ -310,6 +327,7 @@ class StablePointcloudSnapshotter(object):
             print 'No Pointcloud found'
             ipdb.set_trace()
             return
+        
         marker = self.convert_pointcloud2_to_marker(self.last_pointcloud, self.last_pointcloud_tran)
         self.add_pointcloud_to_menu(self.snapshot_num)
         print "made point cloud marker"
@@ -320,6 +338,25 @@ class StablePointcloudSnapshotter(object):
         self.snapshot_num += 1
         self.reinitialize_server()
 
+    
+    def add_pointclouds(cloud_1, cloud_2):
+        added_keys = ['width','row_step','data']
+        cloud_indices = [cloud_1.row_step, cloud_1.row_step + cloud_2.row_step]
+        for key in added_keys:
+            cloud_1.setattr(key,cloud_1.getattr(key) + cloud_2.getattr(key))
+        return cloud_1, AddedCloud(cloud_2, cloud_indices[0], cloud_indices[1])
+
+    def remove_pointcloud(total_cloud, added_cloud, added_cloud_sequence):
+        subtracted_keys = ['width','row_step']
+        start_data = total_cloud.data[:added_cloud.start_index]
+        end_data = total_cloud.data[added_cloud.end_index:]
+        total_cloud.data = start_data + end_data
+        for ac in added_cloud_sequence:
+            ac.shift_cloud(added_cloud.start_index, added_cloud.end_index)
+        for key in subtracted_keys:
+            total_cloud.setattr(key,total_cloud.getattr(key) - added_cloud.getattr(key))
+        
+    
 
 
     def remove_marker(self, marker_name, int_marker):        
