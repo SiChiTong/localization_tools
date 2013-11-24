@@ -8,6 +8,7 @@
         <arg name="rviz_file" value="$(find hose_localization)/graspable_cylinder.rviz"/>
     </include>
 
+    <!--<include file="$(find hubo_state_publisher)/launch/hubo_state.launch"/> -->
 
     <node name="pcd_transfrom_publisher" pkg="tf" type="static_transform_publisher" args="-.5 0 0 0 0 0 /rightFoot /pcd_transform 100"  output="$(arg output)" >
       <remap from="/tf" to="$(arg remapped_tf)" />
@@ -25,13 +26,11 @@
   <node pkg="nodelet" type="nodelet" name="voxel_grid" args="load pcl/VoxelGrid pcl_manager" output="screen">
     <remap from="~input" to="rgbd_longrange/depth/points_xyzrgb_full" />
     <remap from="~output" to="rgbd_longrange/depth/points_xyzrgb"/>
-    <rosparam>
-      filter_field_name: x
-      filter_limit_min: -2.5
-      filter_limit_max: 2.5
-      filter_limit_negative: False
-      leaf_size: 0.03
-      </rosparam>
+    <param name="filter_field_name" value="x" />
+    <param name="filter_limit_min" value="-2.5" />
+    <param name="filter_limit_max" value="2.5" />
+    <param name="filter_limit_negative" value="False" />
+    <param name="leaf_size" value="0.03" />	 
     </node>
 
 
@@ -39,7 +38,7 @@
     	     <arg name="output" value="screen" />
     </include>
    <node name="octomap_server" type="octomap_server_node" pkg="octomap_server">
-   	 <remap from="cloud_in" to="/rgbd_longrange/depth/points_xyzrgb"/>
+   	 <remap from="cloud_in" to="/octomap_input"/>
 	 <param name="frame_id" value = "/leftFoot"/>
 	 <param name="base_frame_id" value = "/leftFoot"/>
 	 <param name="occupancy_max_z" value="2.5"/>
