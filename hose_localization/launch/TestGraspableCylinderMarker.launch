@@ -9,15 +9,31 @@
     </include>
 
 
-    <node name="pcd_transfrom_publisher" pkg="tf" type="static_transform_publisher" args="-.7 0 0 0 0 0 /rightFoot /pcd_transform 100"  output="$(arg output)" >
+    <node name="pcd_transfrom_publisher" pkg="tf" type="static_transform_publisher" args="-.5 0 0 0 0 0 /rightFoot /pcd_transform 100"  output="$(arg output)" >
       <remap from="/tf" to="$(arg remapped_tf)" />
     </node>
 
     <node name="pcd_publisher" pkg="pcl_ros" type="pcd_to_pointcloud" args="/home/jweisz/hose_oct8_B.pcd 10"  output="$(arg output)" >
       <remap from="/tf" to="$(arg remapped_tf)" />
       <param name="frame_id" value="/pcd_transform"/>
-      <remap from="cloud_pcd" to="/rgbd_longrange/depth/points_xyzrgb"/>
+      <remap from="cloud_pcd" to="/rgbd_longrange/depth/points_xyzrgb_full"/>
     </node>
+
+  <node pkg="nodelet" type="nodelet" name="pcl_manager" args="manager" output="screen" />
+
+  <!-- Run a VoxelGrid filter to clean NaNs and downsample the data -->
+  <node pkg="nodelet" type="nodelet" name="voxel_grid" args="load pcl/VoxelGrid pcl_manager" output="screen">
+    <remap from="~input" to="rgbd_longrange/depth/points_xyzrgb_full" />
+    <remap from="~output" to="rgbd_longrange/depth/points_xyzrgb"/>
+    <rosparam>
+      filter_field_name: x
+      filter_limit_min: -2.5
+      filter_limit_max: 2.5
+      filter_limit_negative: False
+      leaf_size: 0.03
+      </rosparam>
+    </node>
+
 
     <include file="$(find hose_localization)/launch/LaunchHoseMarkers.launch" >
     	     <arg name="output" value="screen" />
@@ -26,6 +42,11 @@
    	 <remap from="cloud_in" to="/rgbd_longrange/depth/points_xyzrgb"/>
 	 <param name="frame_id" value = "/leftFoot"/>
 	 <param name="base_frame_id" value = "/leftFoot"/>
+	 <param name="occupancy_max_z" value="2.5"/>
+	 <param name="occupancy_min_z" value="0"/>
+	  <param name="filter_ground" value="1"/>
+	  <param name="pointcloud_max" value="2.5"/>
+
     </node>		     
 	 
 
