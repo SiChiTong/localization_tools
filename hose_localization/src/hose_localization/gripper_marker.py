@@ -46,7 +46,7 @@ class GripperMarker (MoveableButtonMarker):
         if marker_namespace.find('right') < 0:
             #self.marker_mesh_file = "package://drchubo_v3/meshes/convhull_LWR_merged.stl"
             self.side = 'left'
-        self.hand_base_frame = "/Body_%sWR"%(self.side[0].upper())
+        self.hand_base_frame = "/Body_%sWP"%(self.side[0].upper())
         self.marker_frame = "/%s_gripper%s"%(self.side,self.hand_base_frame )
         self.marker_target_frame="/%s_gripper/%sPalm"%(self.side, self.side)
         self.other_frames = ['/Body_TSY','/%sPalm'%(self.side)]
