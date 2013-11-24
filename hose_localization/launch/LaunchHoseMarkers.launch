@@ -3,15 +3,28 @@
 <arg name="output" default="log" />
 <arg name="input_point_cloud" default="/rgbd_longrange/depth/points_xyzrgb" />
 <param name="left_gripper_description" textfile="$(find hose_localization)/gripper_descriptions/left_gripper_v3.urdf"/>
+<param name="right_gripper_description" textfile="$(find hose_localization)/gripper_descriptions/right_gripper_v3.urdf"/>
 
        <node name="left_gripper_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
        	     <remap from="robot_description" to="left_gripper_description" />
              <param name="tf_prefix" value="left_gripper"/>
        </node>	    
 
+ <node name="right_gripper_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+       	     <remap from="robot_description" to="right_gripper_description" />
+             <param name="tf_prefix" value="right_gripper"/>
+       </node>	    
+
     <node name="left_gripper_marker" pkg="hose_localization" type="gripper_marker.py" output="$(arg output)" >
       <remap from="/tf" to="$(arg remapped_tf)" />
       <!--<param name="~user_ns_" value="/left_gripper_marker"/> -->
+
+    </node> 
+
+
+    <node name="right_gripper_marker" pkg="hose_localization" type="gripper_marker.py" output="screen" >
+      <remap from="/tf" to="$(arg remapped_tf)" />
+      <param name="marker_namespace" value="/right_gripper_marker"/>
 
     </node> 
 
