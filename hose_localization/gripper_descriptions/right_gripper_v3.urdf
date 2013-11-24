@@ -1,5 +1,28 @@
 <?xml version="1.0" ?>
 <robot name="drchubo_right_gripper_v3">
+    <link name="Body_RWP">
+        <visual>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RWP_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="">
+                <color rgba="0.3 0.3 0.3 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_RWP_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+        <inertial>
+            <mass value="0.327632198289"/>
+            <inertia ixx="0.000346968656319" ixy="-5.89262498623e-05" ixz="4.30826482069e-06" iyy="0.00057562979027" iyz="1.25504736046e-06" izz="0.000744124634836"/>
+            <origin rpy="0 0 0" xyz="-0.0145320131223 0.0546994779181 -0.000367800192129"/>
+        </inertial>
+    </link>
+
     <link name="Body_RWR">
         <visual>
             <geometry>
@@ -29,6 +52,13 @@
             <origin rpy="0 0 0" xyz="0 0 0"/>
         </inertial>
     </link>
+    <joint name="RWR" type="revolute">
+        <parent link="Body_RWP"/>
+        <child link="Body_RWR"/>
+        <origin rpy="0 0 0" xyz="0.027 0.067 0"/>
+        <axis xyz="-1.0 0 0"/>
+        <limit effort="25" lower="-2.69195220504" upper="2.70766016831" velocity="6.28318530718"/>
+    </joint>
     <joint name="RWR_dummy" type="fixed">
         <parent link="Body_RWR"/>
         <child link="rightPalm"/>
