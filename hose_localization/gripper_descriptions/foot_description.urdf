@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<robot name="foot_model">
+    <link name="Body_LAR">
+        <visual>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_LAR_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="">
+                <color rgba="0.3 0.3 0.3 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://drchubo_v3/meshes/convhull_LAR_merged.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+        <inertial>
+            <mass value="1.173"/>
+            <inertia ixx="0.0040657" ixy="3.062e-05" ixz="-0.0002436" iyy="0.0066321" iyz="-0.00010311" izz="0.00448"/>
+            <origin rpy="0 0 0" xyz="-0.053052 0.0019082 -0.093274"/>
+        </inertial>
+    </link>
+    <link name="leftFoot">
+        <visual>
+            <geometry>
+                <box size="0.21 0.04 0.006"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="-0.04 0.05 0"/>
+            <material name="">
+                <color rgba="0.8 0.8 0.8 1.0"/>
+            </material>
+        </visual>
+        <visual>
+            <geometry>
+                <box size="0.21 0.04 0.006"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="-0.04 -0.04 0"/>
+            <material name="">
+                <color rgba="0.8 0.8 0.8 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.21 0.04 0.006"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="-0.04 0.05 0"/>
+        </collision>
+        <collision>
+            <geometry>
+                <box size="0.21 0.04 0.006"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="-0.04 -0.04 0"/>
+        </collision>
+        <inertial>
+            <mass value="0.1"/>
+            <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </inertial>
+    </link>
+    <joint name="LAR_dummy" type="fixed">
+        <parent link="Body_LAR"/>
+        <child link="leftFoot"/>
+        <origin rpy="0 0 0" xyz="0 0 -0.1401"/>
+    </joint>
+</robot>

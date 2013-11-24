@@ -1,0 +1,39 @@
+<launch>
+<arg name="remapped_tf" default="/tf" />
+<arg name="output" default="log" />
+<arg name="input_point_cloud" default="/rgbd_longrange/depth/points_xyzrgb" />
+<param name="left_foot_description" textfile="$(find hose_localization)/gripper_descriptions/foot_description.urdf"/>
+<param name="right_foot_description" textfile="$(find hose_localization)/gripper_descriptions/foot_description.urdf"/>
+
+       <node name="left_foot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+       	     <remap from="robot_description" to="left_foot_description" />
+             <param name="tf_prefix" value="left_foot"/>
+       </node>	    
+
+ <node name="right_foot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+       	     <remap from="robot_description" to="right_foot_description" />
+             <param name="tf_prefix" value="right_foot"/>
+       </node>	    
+
+    <node name="left_foot_marker" pkg="hose_localization" type="foot_marker.py" output="$(arg output)" >
+      <remap from="/tf" to="$(arg remapped_tf)" />
+      <param name="marker_namespace" value="/leftFoot"/>
+
+    </node> 
+
+
+    <node name="right_foot_marker" pkg="hose_localization" type="foot_marker.py" output="screen" >
+      <remap from="/tf" to="$(arg remapped_tf)" />
+      <param name="marker_namespace" value="/rightFoot"/>
+
+    </node> 
+
+
+
+    <node name="cinder_block" pkg="hose_localization" type="cinder_block_marker.py" output="screen" >
+        <remap from="/tf" to="$(arg remapped_tf)" /> 			
+        <remap from="/snapshot_input_cloud" to="$(arg input_point_cloud)" />
+	<remap from="/output_cloud" to="/octomap_input"/>
+    </node> 
+
+</launch>
