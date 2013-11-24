@@ -38,12 +38,12 @@ def rotation_from_quaternion(q):
     return [angle, direc]
 
 class GripperMarker (MoveableButtonMarker):
-    def __init__(self, marker_namespace, is_left_side = True, 
+    def __init__(self, marker_namespace, 
                frame="/world", marker_tran = numpy.eye(4)):
         MoveableButtonMarker.__init__(self, marker_namespace, frame, marker_tran)
         #self.marker_mesh_file =  "package://drchubo_v3/meshes/convhull_RWR_merged.stl"
         self.side = 'right'
-        if is_left_side:
+        if marker_namespace.find('right') < 0:
             #self.marker_mesh_file = "package://drchubo_v3/meshes/convhull_LWR_merged.stl"
             self.side = 'left'
         self.hand_base_frame = "/Body_%sWR"%(self.side[0].upper())
@@ -128,10 +128,15 @@ if __name__ == '__main__':
     def print_pose(marker):
         print "Marker pose"
         print marker.marker_pose_stamped
-    namespace = rospy.get_param('~user_ns_','left_gripper_marker' )
+    
+    
+
+    
+    rospy.init_node('marker')
+    namespace = rospy.get_param('~marker_namespace','left_gripper_marker' )
+
     print namespace
-    rospy.init_node(namespace)
-    grasper_marker = GripperMarker(namespace,True, "/leftFoot")
+    grasper_marker = GripperMarker(namespace,"/leftFoot")
     grasper_marker.update_menu("output pose", print_pose, [grasper_marker])
 
     grasper_marker.populate_menu()                
