@@ -133,8 +133,9 @@ class GraspableCylinderMarker(MoveableButtonMarker):
     def mod_property(self, mod_object,mod_attr,mod_value):
         '''Modify state machine attribute by a certain amount '''
         current_value = getattr(mod_object,mod_attr)
+        self.create_marker()
         setattr(mod_object,mod_attr,current_value+mod_value)
-
+        
 
     def switch_property(self, mod_object,mod_attr,new_mod_attr):
         '''Replace one state machine attribute with another attribute'''
