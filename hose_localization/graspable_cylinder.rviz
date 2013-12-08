@@ -15,6 +15,7 @@ Panels:
         - /InteractiveMarkers4
         - /RobotModel3
         - /PointCloud21
+        - /InteractiveMarkers5
       Splitter Ratio: 0.5
     Tree Height: 648
   - Class: rviz/Selection
@@ -555,6 +556,8 @@ Visualization Manager:
           Value: true
         /button_marker_graspable_cylinder:
           Value: true
+        /button_marker_graspable_reel:
+          Value: true
         /hubo_base:
           Value: true
         /leftFoot:
@@ -684,6 +687,8 @@ Visualization Manager:
                       /Body_LAR:
                         /leftFoot:
                           /button_marker_graspable_cylinder:
+                            {}
+                          /button_marker_graspable_reel:
                             {}
                           /left_gripper/Body_LWP:
                             /left_gripper/Body_LWR:
@@ -1035,9 +1040,18 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.01
       Style: Flat Squares
-      Topic: /octomap_input
+      Topic: /hokuyo_object_pointcloud
       Use Fixed Frame: true
       Use rainbow: true
+      Value: true
+    - Class: rviz/InteractiveMarkers
+      Enable Transparency: true
+      Enabled: true
+      Name: InteractiveMarkers
+      Show Axes: false
+      Show Descriptions: true
+      Show Visual Aids: false
+      Update Topic: /graspable_reel_test/update
       Value: true
   Enabled: true
   Global Options:
@@ -1090,5 +1104,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1298
-  X: 491
+  X: 484
   Y: 74
