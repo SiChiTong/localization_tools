@@ -98,7 +98,7 @@ class FootMarker (MoveableButtonMarker):
 
         self.int_marker.description = ""
         for tf_name in self.other_frames:
-            if self.tf_listener.canTransform(self.marker_target_frame, tf_name, rospy.Time(0)):
+            if self.tf_listener.canTransform(self.marker_target_frame, tf_name, rospy.Time(0)) and self.tf_listener.canTransform('/Body_TSY', self.marker_target_frame, rospy.Time(0)):
                 
                 other_basis_tf = self.tf_listener.lookupTransform( tf_name, self.marker_target_frame, rospy.Time(0))
                 
