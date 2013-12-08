@@ -5,35 +5,43 @@
 <param name="left_foot_description" textfile="$(find hose_localization)/gripper_descriptions/foot_description.urdf"/>
 <param name="right_foot_description" textfile="$(find hose_localization)/gripper_descriptions/foot_description.urdf"/>
 
-       <node name="left_foot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+   <!--    <node name="left_foot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
        	     <remap from="robot_description" to="left_foot_description" />
              <param name="tf_prefix" value="left_foot"/>
+	     <remap from="/tf" to="/tf_remapped" /> 
        </node>	    
-
+-->
  <node name="right_foot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
        	     <remap from="robot_description" to="right_foot_description" />
              <param name="tf_prefix" value="right_foot"/>
+	     <remap from="/tf" to="$(arg remapped_tf)" /> 
+	   
+	     <!--<remap from="joint_states" to="/relay/hubo_joint_states"/>-->
+	     
        </node>	    
 
-    <node name="left_foot_marker" pkg="hose_localization" type="foot_marker.py" output="$(arg output)" >
+<!--    <node name="left_foot_marker" pkg="hose_localization" type="foot_marker.py" output="$(arg output)" >
       <remap from="/tf" to="$(arg remapped_tf)" />
       <param name="marker_namespace" value="/leftFoot"/>
+      <remap from="/tf" to="/workstation_tf" />
 
     </node> 
-
+-->
 
     <node name="right_foot_marker" pkg="hose_localization" type="foot_marker.py" output="screen" >
-      <remap from="/tf" to="$(arg remapped_tf)" />
+      
       <param name="marker_namespace" value="/rightFoot"/>
-
+      <remap from="/tf" to="$(arg remapped_tf)" /> 
+      
     </node> 
 
 
-
+<!--
     <node name="cinder_block" pkg="hose_localization" type="cinder_block_marker.py" output="screen" >
         <remap from="/tf" to="$(arg remapped_tf)" /> 			
         <remap from="/snapshot_input_cloud" to="$(arg input_point_cloud)" />
 	<remap from="/output_cloud" to="/octomap_input"/>
+	<remap from="/tf" to="/workstation_tf" />
     </node> 
-
+-->
 </launch>
