@@ -12,6 +12,7 @@ from interactive_markers.interactive_marker_server import *
 from interactive_markers.menu_handler import *
 from pointcloud2 import *
 import std_srvs.srv
+import time
 
 class AddedCloud(object):
     def __init__(self, pointcloud, start_index, end_index):
@@ -180,10 +181,14 @@ class StablePointcloudSnapshotter(object):
         self.snapshot_num = 0
         self.hidden_markers = []
         self.pc_marker_dict = {}
+        self.finished_sub = rospy.Subscriber("/ud_cloud_completion_signal", std_msgs.msg.Bool, self.scan_finished)
 
     def feedback(self, msg):
         pass
 
+    def scan_finished(self, msg):
+        if msg.data:
+            self.snapshot_callback(msg)
 
     def make_alignment_marker(self):
         def create_axis_control(axis, interaction_mode, base_name):
@@ -240,9 +245,14 @@ class StablePointcloudSnapshotter(object):
             
             if pc_msg is not []:
                 marker_name = '/' + marker.text.replace(' ','_')
-                current_transform = self.tf_listener.lookupTransform( original_frame, marker.header.frame_id , rospy.Time(0))
-                
-                tfp = ComponentsFromTransform(ComposeTransforms(InvertTransform(TransformFromComponents(*current_transform)),PoseToTransform(marker.pose)))
+                current_transform = []
+                try:
+                    current_transform = self.tf_listener.lookupTransform( original_frame, marker.header.frame_id , rospy.Time(0))
+                except Exception as e:
+                    rospy.logwarn("StablePointcloudSnapshotter::publish_pointclouds failed to look up transform")
+                    print e
+                    return
+                tfp = ComponentsFromTransform(ComposeTransforms(PoseToTransform(marker.pose),InvertTransform(TransformFromComponents(*current_transform))))
                 if tfp[1] == [0,0,0,0]:
                     tfp[1] = [0,0,0,1]
                 pc_msg.header.stamp = rospy.Time.now()
@@ -350,21 +360,22 @@ class StablePointcloudSnapshotter(object):
 
     def pointcloud_callback(self, msg):
         
-        try:
+        try:            
             self.tf_listener.waitForTransform(self.stable_frame, msg.header.frame_id, rospy.Time(), rospy.Duration(4.0))
             self.tf_listener.waitForTransform(self.stable_frame, msg.header.frame_id, rospy.Time.now(), rospy.Duration(4.0))
-        except:
+            self.last_pointcloud_tran = self.tf_listener.asMatrix(self.stable_frame, msg.header)
+        except Exception as e:
+            rospy.logwarn("StablePointcloudSnapshotter::pointcloud_callback failed to look up transform")            
             return
         self.last_pointcloud =  msg    
-        self.last_pointcloud_tran = self.tf_listener.asMatrix(self.stable_frame, msg.header)
+        
 
     def snapshot_callback(self, msg):
         self.snapshot()
     
     def snapshot(self):
         if not self.last_pointcloud:
-            print 'No Pointcloud found'
-            ipdb.set_trace()
+            rospy.logwarn("StablePointcloudSnapshotter::snapshot no point cloud cached")
             return
         
         marker = self.convert_pointcloud2_to_marker(self.last_pointcloud, self.last_pointcloud_tran)
@@ -447,7 +458,7 @@ if __name__ == '__main__':
     tf_broadcaster = tf.TransformBroadcaster()
 
     loop = rospy.Rate(5)
-    snapper = StablePointcloudSnapshotter('/leftFoot', 1, '/rgbd_longrange/depth/points_xyzrgb', tf_listener, tf_broadcaster)
+    snapper = StablePointcloudSnapshotter('/leftFoot', 1, '/input_pointcloud', tf_listener, tf_broadcaster)
     #    IPython.embed()
     while not rospy.is_shutdown():
         snapper.update()
