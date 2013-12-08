@@ -101,6 +101,11 @@ class FootMarker (MoveableButtonMarker):
             if self.tf_listener.canTransform(self.marker_target_frame, tf_name, rospy.Time(0)) and self.tf_listener.canTransform('/Body_TSY', self.marker_target_frame, rospy.Time(0)):
                 
                 other_basis_tf = self.tf_listener.lookupTransform( tf_name, self.marker_target_frame, rospy.Time(0))
+                to_body_tf = self.tf_listener.lookupTransform('/Body_TSY', self.marker_target_frame, rospy.Time(0))
+                to_body_rot_transform = TransformFromComponents([0,0,0], to_body_tf[1])
+                to_body_rot_inv = InvertTransform(to_body_rot_transform)
+                other_basis_tf = ComponentsFromTransform(ComposeTransforms(to_body_rot_transform,TransformFromComponents(*other_basis_tf)))
+                
                 
                 other_euler = tf.transformations.euler_from_quaternion(other_basis_tf[1])
                 other_euler_deg = [angle*180.0/math.pi for angle in other_euler]
