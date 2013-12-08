@@ -1,0 +1,904 @@
+Panels:
+  - Class: rviz/Displays
+    Help Height: 78
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /Status1
+        - /RobotModel1
+        - /RobotModel2
+        - /InteractiveMarkers1
+        - /InteractiveMarkers2
+        - /InteractiveMarkers3
+        - /InteractiveMarkers4
+        - /RobotModel3
+        - /PointCloud21
+      Splitter Ratio: 0.5
+    Tree Height: 648
+  - Class: rviz/Selection
+    Name: Selection
+  - Class: rviz/Tool Properties
+    Expanded:
+      - /2D Pose Estimate1
+      - /2D Nav Goal1
+      - /Publish Point1
+    Name: Tool Properties
+    Splitter Ratio: 0.588679
+  - Class: rviz/Views
+    Expanded:
+      - /Current View1
+    Name: Views
+    Splitter Ratio: 0.5
+  - Class: rviz/Time
+    Experimental: false
+    Name: Time
+    SyncMode: 0
+    SyncSource: ""
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.5
+      Cell Size: 1
+      Class: rviz/Grid
+      Color: 160; 160; 164
+      Enabled: true
+      Line Style:
+        Line Width: 0.03
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 10
+      Reference Frame: <Fixed Frame>
+      Value: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Body_LAP:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LAR:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LEP:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LF11:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LF12:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LF13:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LF21:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LF22:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LF23:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LF31:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LF32:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LF33:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LHP:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LHR:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LHY:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LKP:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LSP:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LSR:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LSY:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LWP:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LWR:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_LWY:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RAP:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RAR:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_REP:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RF11:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RF12:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RF13:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RF21:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RF22:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RF23:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RF31:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RF32:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RF33:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RF41:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RF42:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RF43:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RHP:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RHR:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RHY:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RKP:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RSP:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RSR:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RSY:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RWP:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RWR:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_RWY:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_TSY:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Body_Torso:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        hubo_base:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        leftFoot:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        leftPalm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        rightFoot:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        rightPalm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ud_hokuyo_body_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_hokuyo_mount_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_hokuyo_tilt_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ud_hokuyo_tilt_servo_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_laser_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ud_microstrain_imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_neck_pan_arm_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_neck_pan_arm_right_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_neck_pan_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_neck_pan_top_plate_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_neck_tilt_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ud_neck_tilt_servo_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_neck_tilt_tall_side_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_neck_tilt_tall_side_right_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_neck_tilt_top_plate_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_sensor_head_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_stereo_camera_center_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_stereo_camera_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_stereo_camera_lens_center_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_stereo_camera_lens_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_stereo_camera_lens_right_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_stereo_camera_right_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ud_stereo_shelf_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel
+      Robot Description: robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        /Body_LAP:
+          Value: true
+        /Body_LAR:
+          Value: true
+        /Body_LEP:
+          Value: true
+        /Body_LF11:
+          Value: true
+        /Body_LF12:
+          Value: true
+        /Body_LF13:
+          Value: true
+        /Body_LF21:
+          Value: true
+        /Body_LF22:
+          Value: true
+        /Body_LF23:
+          Value: true
+        /Body_LF31:
+          Value: true
+        /Body_LF32:
+          Value: true
+        /Body_LF33:
+          Value: true
+        /Body_LHP:
+          Value: true
+        /Body_LHR:
+          Value: true
+        /Body_LHY:
+          Value: true
+        /Body_LKP:
+          Value: true
+        /Body_LSP:
+          Value: true
+        /Body_LSR:
+          Value: true
+        /Body_LSY:
+          Value: true
+        /Body_LWP:
+          Value: true
+        /Body_LWR:
+          Value: true
+        /Body_LWY:
+          Value: true
+        /Body_RAP:
+          Value: true
+        /Body_RAR:
+          Value: true
+        /Body_REP:
+          Value: true
+        /Body_RF11:
+          Value: true
+        /Body_RF12:
+          Value: true
+        /Body_RF13:
+          Value: true
+        /Body_RF21:
+          Value: true
+        /Body_RF22:
+          Value: true
+        /Body_RF23:
+          Value: true
+        /Body_RF31:
+          Value: true
+        /Body_RF32:
+          Value: true
+        /Body_RF33:
+          Value: true
+        /Body_RF41:
+          Value: true
+        /Body_RF42:
+          Value: true
+        /Body_RF43:
+          Value: true
+        /Body_RHP:
+          Value: true
+        /Body_RHR:
+          Value: true
+        /Body_RHY:
+          Value: true
+        /Body_RKP:
+          Value: true
+        /Body_RSP:
+          Value: true
+        /Body_RSR:
+          Value: true
+        /Body_RSY:
+          Value: true
+        /Body_RWP:
+          Value: true
+        /Body_RWR:
+          Value: true
+        /Body_RWY:
+          Value: true
+        /Body_TSY:
+          Value: true
+        /Body_Torso:
+          Value: true
+        /button_marker_cinder_block:
+          Value: true
+        /hubo_base:
+          Value: true
+        /leftFoot:
+          Value: true
+        /leftPalm:
+          Value: true
+        /left_foot/Body_LAR:
+          Value: true
+        /left_foot/leftFoot:
+          Value: true
+        /pcd_transform:
+          Value: true
+        /rightFoot:
+          Value: true
+        /rightPalm:
+          Value: true
+        /right_foot/Body_LAR:
+          Value: true
+        /right_foot/leftFoot:
+          Value: true
+        /ud_hokuyo_body_link:
+          Value: true
+        /ud_hokuyo_mount_link:
+          Value: true
+        /ud_hokuyo_tilt_link:
+          Value: true
+        /ud_hokuyo_tilt_servo_link:
+          Value: true
+        /ud_laser_link:
+          Value: true
+        /ud_microstrain_imu_link:
+          Value: true
+        /ud_neck_pan_arm_left_link:
+          Value: true
+        /ud_neck_pan_arm_right_link:
+          Value: true
+        /ud_neck_pan_link:
+          Value: true
+        /ud_neck_pan_top_plate_link:
+          Value: true
+        /ud_neck_tilt_link:
+          Value: true
+        /ud_neck_tilt_servo_link:
+          Value: true
+        /ud_neck_tilt_tall_side_left_link:
+          Value: true
+        /ud_neck_tilt_tall_side_right_link:
+          Value: true
+        /ud_neck_tilt_top_plate_link:
+          Value: true
+        /ud_sensor_head_base_link:
+          Value: true
+        /ud_stereo_camera_center_link:
+          Value: true
+        /ud_stereo_camera_left_link:
+          Value: true
+        /ud_stereo_camera_lens_center_link:
+          Value: true
+        /ud_stereo_camera_lens_left_link:
+          Value: true
+        /ud_stereo_camera_lens_right_link:
+          Value: true
+        /ud_stereo_camera_right_link:
+          Value: true
+        /ud_stereo_shelf_link:
+          Value: true
+        All Enabled: true
+      Marker Scale: 0.25
+      Name: TF
+      Show Arrows: false
+      Show Axes: false
+      Show Names: false
+      Tree:
+        /hubo_base:
+          /Body_TSY:
+            /Body_LHY:
+              /Body_LHR:
+                /Body_LHP:
+                  /Body_LKP:
+                    /Body_LAP:
+                      /Body_LAR:
+                        /leftFoot:
+                          /button_marker_cinder_block:
+                            {}
+                          /left_foot/Body_LAR:
+                            /left_foot/leftFoot:
+                              {}
+                          /right_foot/Body_LAR:
+                            /right_foot/leftFoot:
+                              {}
+            /Body_RHY:
+              /Body_RHR:
+                /Body_RHP:
+                  /Body_RKP:
+                    /Body_RAP:
+                      /Body_RAR:
+                        /rightFoot:
+                          /pcd_transform:
+                            {}
+            /Body_Torso:
+              /Body_LSP:
+                /Body_LSR:
+                  /Body_LSY:
+                    /Body_LEP:
+                      /Body_LWY:
+                        /Body_LWP:
+                          /Body_LWR:
+                            /Body_LF11:
+                              /Body_LF12:
+                                /Body_LF13:
+                                  {}
+                            /Body_LF21:
+                              /Body_LF22:
+                                /Body_LF23:
+                                  {}
+                            /Body_LF31:
+                              /Body_LF32:
+                                /Body_LF33:
+                                  {}
+                            /leftPalm:
+                              {}
+              /Body_RSP:
+                /Body_RSR:
+                  /Body_RSY:
+                    /Body_REP:
+                      /Body_RWY:
+                        /Body_RWP:
+                          /Body_RWR:
+                            /Body_RF11:
+                              /Body_RF12:
+                                /Body_RF13:
+                                  {}
+                            /Body_RF21:
+                              /Body_RF22:
+                                /Body_RF23:
+                                  {}
+                            /Body_RF31:
+                              /Body_RF32:
+                                /Body_RF33:
+                                  {}
+                            /Body_RF41:
+                              /Body_RF42:
+                                /Body_RF43:
+                                  {}
+                            /rightPalm:
+                              {}
+              /ud_sensor_head_base_link:
+                /ud_neck_pan_link:
+                  /ud_neck_pan_top_plate_link:
+                    /ud_neck_pan_arm_left_link:
+                      {}
+                    /ud_neck_pan_arm_right_link:
+                      {}
+                  /ud_neck_tilt_link:
+                    /ud_neck_tilt_tall_side_left_link:
+                      /ud_hokuyo_tilt_servo_link:
+                        /ud_hokuyo_tilt_link:
+                          /ud_hokuyo_mount_link:
+                            /ud_hokuyo_body_link:
+                              /ud_laser_link:
+                                {}
+                    /ud_neck_tilt_tall_side_right_link:
+                      /ud_neck_tilt_servo_link:
+                        {}
+                    /ud_neck_tilt_top_plate_link:
+                      /ud_stereo_shelf_link:
+                        /ud_microstrain_imu_link:
+                          {}
+                        /ud_stereo_camera_center_link:
+                          /ud_stereo_camera_lens_center_link:
+                            {}
+                        /ud_stereo_camera_left_link:
+                          /ud_stereo_camera_lens_left_link:
+                            {}
+                        /ud_stereo_camera_right_link:
+                          /ud_stereo_camera_lens_right_link:
+                            {}
+      Update Interval: 0
+      Value: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Body_LAR:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        leftFoot:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel
+      Robot Description: left_foot_description
+      TF Prefix: left_foot
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Class: rviz/InteractiveMarkers
+      Enable Transparency: true
+      Enabled: true
+      Name: InteractiveMarkers
+      Show Axes: false
+      Show Descriptions: true
+      Show Visual Aids: false
+      Update Topic: /cinder_block_test/update
+      Value: true
+    - Class: rviz/InteractiveMarkers
+      Enable Transparency: true
+      Enabled: true
+      Name: InteractiveMarkers
+      Show Axes: false
+      Show Descriptions: true
+      Show Visual Aids: false
+      Update Topic: /leftFoot/update
+      Value: true
+    - Class: rviz/InteractiveMarkers
+      Enable Transparency: true
+      Enabled: true
+      Name: InteractiveMarkers
+      Show Axes: false
+      Show Descriptions: true
+      Show Visual Aids: false
+      Update Topic: /snapshot_int_marker_server/update
+      Value: true
+    - Class: rviz/InteractiveMarkers
+      Enable Transparency: true
+      Enabled: true
+      Name: InteractiveMarkers
+      Show Axes: false
+      Show Descriptions: true
+      Show Visual Aids: false
+      Update Topic: /rightFoot/update
+      Value: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Body_LAR:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        leftFoot:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel
+      Robot Description: right_foot_description
+      TF Prefix: right_foot
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: ""
+      Decay Time: 0
+      Enabled: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: PointCloud2
+      Position Transformer: ""
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.01
+      Style: Flat Squares
+      Topic: /octomap_input
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: false
+  Enabled: true
+  Global Options:
+    Background Color: 48; 48; 48
+    Fixed Frame: /Body_LAP
+  Name: root
+  Tools:
+    - Class: rviz/Interact
+      Hide Inactive Objects: true
+    - Class: rviz/MoveCamera
+    - Class: rviz/Select
+    - Class: rviz/FocusCamera
+    - Class: rviz/Measure
+    - Class: rviz/SetInitialPose
+      Topic: /initialpose
+    - Class: rviz/SetGoal
+      Topic: /move_base_simple/goal
+    - Class: rviz/PublishPoint
+      Single click: true
+      Topic: /clicked_point
+  Value: true
+  Views:
+    Current:
+      Class: rviz/Orbit
+      Distance: 2.70016
+      Focal Point:
+        X: 0.448908
+        Y: -0.0156727
+        Z: 0.578736
+      Name: Current View
+      Near Clip Distance: 0.01
+      Pitch: 0.289797
+      Target Frame: <Fixed Frame>
+      Value: Orbit (rviz)
+      Yaw: 0.631376
+    Saved: ~
+Window Geometry:
+  Displays:
+    collapsed: false
+  Height: 929
+  Hide Left Dock: false
+  Hide Right Dock: false
+  QMainWindow State: 000000ff00000000fd00000004000000000000036700000317fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006400fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000002800000317000000dd00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000002400530065006e0073006f00720043006f006e00740072006f006c00500061006e0065006c0100000220000000cc0000000000000000000000010000010f000002c4fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a005600690065007700730000000028000002c4000000b000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000005120000003efc0100000002fb0000000800540069006d0065010000000000000512000002f600fffffffb0000000800540069006d00650100000000000004500000000000000000000001a50000031700000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Selection:
+    collapsed: false
+  Time:
+    collapsed: false
+  Tool Properties:
+    collapsed: false
+  Views:
+    collapsed: false
+  Width: 1298
+  X: 470
+  Y: 74
