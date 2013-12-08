@@ -40,7 +40,7 @@ class ObjectStatus:
 
     def __init__(self):
         self.default_thickness = 0.02
-        self.default_radius = 0.05
+        self.default_radius = 0.0381
         self.default_height = 0.1
         self.radius = self.default_radius
         self.height = self.default_height
