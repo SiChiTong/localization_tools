@@ -146,12 +146,10 @@ class GraspableCylinderMarker(MoveableButtonMarker):
 
 
     def send_pregrasp_transform(self):
-        #send the pregrasp transform in the cylinder's frame
-        target_pose = self.status.pose_stamped.pose
-            
+        #send the pregrasp transform in the cylinder's frame       
+        
         pregrasp_distance = .1
         
-
         target_tran = numpy.eye(4) # This is for using the cylinder's parents frame pm.toMatrix(pm.fromMsg(target_pose))
         hand_tran = target_tran.copy()
 
@@ -169,14 +167,34 @@ class GraspableCylinderMarker(MoveableButtonMarker):
         pregrasp_pose_stamped = PoseStamped()
         pregrasp_pose_stamped.pose = pregrasp_pose
         pregrasp_pose_stamped.header.frame_id = self.int_marker.name
-
         self.send_hand_pose(pregrasp_pose_stamped)
+
+        
+    def send_hook_transform(self):        
+        pregrasp_pose_stamped = PoseStamped()
+        pregrasp_pose_stamped.header.frame_id = self.int_marker.name
+        pose_tf = InvertTransform(TransformFromComponents([-0.218, -0.070, 0.033], [0.857, 0.015, 0.515, -0.027]))
+        pregrasp_pose_stamped.pose =  PoseFromTransform(pose_tf)
+        
+        self.send_hand_pose(pregrasp_pose_stamped)
+
+
+    def send_turn_cylinder_pose(self):
+        turn_cylinder_transform = TransformFromComponents([0.839, -0.576, -0.470],[-0.192, -0.587, -0.053, 0.785])
+        pregrasp_pose = PoseFromTransform(turn_cylinder_transform)
+        pregrasp_pose_stamped = PoseStamped()
+        pregrasp_pose_stamped.pose = pregrasp_pose
+        pregrasp_pose_stamped.header.frame_id = self.int_marker.name
+        self.send_hand_pose(pregrasp_pose_stamped)
+    
+
 
     def initialize_menu(self):
         
         self.menu_options = [        
             {'label':"send pregrasp transform", 'action':self.send_pregrasp_transform, 'args':[]},
-
+            {'label':"send turn transform", 'action':self.send_turn_cylinder_pose, 'args':[]},
+            {'label':"send hook transform", 'action':self.send_hook_transform, 'args':[]},
 
             {'label':"Increase radius by 1.0cm", 'action': self.mod_property, 'args':[self.status,'radius',0.01]},
             {'label':"Decrease radius by 1.0cm", 'action': self.mod_property, 'args':[self.status,'radius',-0.01]},
@@ -206,8 +224,11 @@ class GraspableCylinderMarker(MoveableButtonMarker):
 
 if __name__ == '__main__':
     rospy.init_node('cylinder_marker_test')
-
-    cylinder_marker = GraspableCylinderMarker('graspable_cylinder_test','/leftFoot')
+     
+    lf_gc = [[0.385, 0.0, 0.767],[0.000, 1.0, -0.0, 0.00]]
+    lf_gc_transform = TransformFromComponents(*lf_gc)
+    lf_gc_mat = TransformToMatrix(lf_gc_transform)
+    cylinder_marker = GraspableCylinderMarker('graspable_cylinder_test','/leftFoot', lf_gc_mat)
     cylinder_marker.initialize_menu()
     loop = rospy.Rate(20)
 
