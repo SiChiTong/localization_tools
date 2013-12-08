@@ -1,6 +1,9 @@
 <launch>
 <arg name="remapped_tf" default="/tf" />
 <arg name="output" default="log" />
+<arg name="pcd_frame_id" default="/pcd_transform" />
+<arg name="pointcloud_file" default="/home/jweisz/hose_oct8_B.pcd" />
+
 <param name="robot_description" textfile="$(find drchubo_v3)/robots/drchubo_v3.urdf"/>
 
 
@@ -14,9 +17,9 @@
       <remap from="/tf" to="$(arg remapped_tf)" />
     </node>
 
-    <node name="pcd_publisher" pkg="pcl_ros" type="pcd_to_pointcloud" args="/home/jweisz/hose_oct8_B.pcd 10"  output="$(arg output)" >
+    <node name="pcd_publisher" pkg="pcl_ros" type="pcd_to_pointcloud" args="$(arg pointcloud_file) 1"  output="$(arg output)" >
       <remap from="/tf" to="$(arg remapped_tf)" />
-      <param name="frame_id" value="/pcd_transform"/>
+      <param name="frame_id" value="$(arg pcd_frame_id)"/>
       <remap from="cloud_pcd" to="/rgbd_longrange/depth/points_xyzrgb_full"/>
     </node>
 
@@ -36,6 +39,7 @@
 
     <include file="$(find hose_localization)/launch/LaunchHoseMarkers.launch" >
     	     <arg name="output" value="screen" />
+	     <arg name="output_point_cloud" value="/aligner_input" />
     </include>
    <node name="octomap_server" type="octomap_server_node" pkg="octomap_server">
    	 <remap from="cloud_in" to="/octomap_input"/>
@@ -47,6 +51,10 @@
 	  <param name="pointcloud_max" value="2.5"/>
 
     </node>		     
-	 
+
+    <node name="icp_aligner" type="icp_aligner" pkg="hubo_hose_task_planner" output="screen" launch-prefix="xterm -e gdb --args">
+    <remap from="/input_point_cloud" to="/aligner_input"/>
+    <remap from="/output_point_cloud" to="/octomap_input"/>
+    </node>
 
 </launch>
