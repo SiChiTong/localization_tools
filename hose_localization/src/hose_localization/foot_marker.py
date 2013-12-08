@@ -49,7 +49,7 @@ class FootMarker (MoveableButtonMarker):
         self.hand_base_frame = "/Body_%sAR"%(self.side[0].upper())
         self.marker_frame = "/%s_foot/Body_LAR"%(self.side)
         self.marker_target_frame="/%s_foot/leftFoot"%(self.side)
-        self.other_frames = ['/Body_TSY','/%sFoot'%(self.side)]
+        self.other_frames = ['/Body_TSY','/leftFoot', '/rightFoot']
         self.tf_listener = tf.TransformListener()
         self.tf_broadcaster = tf.TransformBroadcaster()
         self.update_menu("snap to foot",self.align_to_foot,[])
