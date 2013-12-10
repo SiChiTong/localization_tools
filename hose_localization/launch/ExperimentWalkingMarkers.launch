@@ -1,0 +1,32 @@
+<launch>
+<arg name="remapped_tf" default="/workstation_tf" />
+<arg name="output" default="log" />
+<arg name="relay_topic_prefix" default="/relay" />
+
+<!--<param name="robot_description" textfile="$(find drchubo_v3)/robots/drchubo_v3.urdf"/> -->
+
+
+    <node name="rviz_jon" pkg="rviz" type="rviz" args="-d $(find hose_localization)/walking.rviz" >
+        <remap from="/tf" to="$(arg remapped_tf)" /> 	
+    </node>
+      
+
+
+<!--<include file="$(find hose_localization)/launch/LinkEndpoint.launch" /> -->
+
+
+
+    <include file="$(find hose_localization)/launch/LaunchWalkingMarkers.launch" >
+    	     <arg name="output" value="screen" />
+	     <arg name="input_point_cloud" value="$(arg relay_topic_prefix)/hokuyo_object_pointcloud" />
+	     
+	     <arg name="relay_topic_prefix" value="$(arg relay_topic_prefix)" />
+	     <arg name="joint_topic_prefix" value="/hubo" />
+
+
+	     
+    </include>
+
+	 
+-->
+</launch>
