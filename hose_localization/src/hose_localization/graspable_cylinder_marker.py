@@ -75,7 +75,7 @@ class GraspableCylinderMarker(MoveableButtonMarker):
         self.point_sub = rospy.Subscriber('/clicked_point',PointStamped, self.set_position)
         self.tf_broadcaster = tf.TransformBroadcaster()
         self.tf_listener = tf.TransformListener()
-        self.snapshotter = stable_pointcloud_snapshotter.StablePointcloudSnapshotter(frame, 1,'/snapshot_input_cloud', self.tf_listener, self.tf_broadcaster)
+        #self.snapshotter = stable_pointcloud_snapshotter.StablePointcloudSnapshotter(frame, 1,'/snapshot_input_cloud', self.tf_listener, self.tf_broadcaster)
 
     def send_hand_pose(self, pose_stamped_msg):
         self.hand_pose_publishers[self.status.hands].publish(pose_stamped_msg)
@@ -207,7 +207,7 @@ class GraspableCylinderMarker(MoveableButtonMarker):
             {'label':"Set session default pose", 'action': self.switch_property, 'args':[self.status,'session_pose_stamped','pose_stamped']},
             {'label':"Use LEFT hand", 'action': self.switch_property, 'args':[self.status,'hands','LEFT']},
             {'label':"Use RIGHT hand", 'action': self.switch_property, 'args':[self.status,'hands','RIGHT']},
-            {'label':"Take Snapshot", 'action': self.snapshotter.snapshot, 'args': []}
+            
         ]
 
         self.populate_menu()
@@ -217,9 +217,12 @@ class GraspableCylinderMarker(MoveableButtonMarker):
         
         MoveableButtonMarker.update(self)
         tfp = ComponentsFromTransform(PoseToTransform(self.int_marker.pose))
+        this_name = self.int_marker.name
+        if this_name[0] != '/':
+            this_name = '/' + this_name
         
-        self.tf_broadcaster.sendTransform(tfp[0],tfp[1], rospy.Time().now(), self.int_marker.name, self.int_marker.header.frame_id )
-        self.snapshotter.update()
+        self.tf_broadcaster.sendTransform(tfp[0],tfp[1], rospy.Time().now(), this_name, self.int_marker.header.frame_id )
+        #self.snapshotter.update()
 
 
 if __name__ == '__main__':
