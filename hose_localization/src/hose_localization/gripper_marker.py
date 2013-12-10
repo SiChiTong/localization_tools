@@ -106,13 +106,14 @@ class GripperMarker (MoveableButtonMarker):
         self.tf_broadcaster.sendTransform(tfp[0],tfp[1], rospy.Time().now(), self.marker_frame, self.int_marker.header.frame_id )
 
         self.int_marker.description = ""
+        if self.debug_transform:
+            ipdb.set_trace()
         for tf_name in self.other_frames:
             if self.tf_listener.canTransform(self.marker_target_frame, tf_name, rospy.Time(0)):
                 
                 other_basis_tf = self.tf_listener.lookupTransform( tf_name, self.marker_target_frame, rospy.Time(0))
                 to_body_tf = self.tf_listener.lookupTransform('/Body_TSY', self.marker_target_frame, rospy.Time(0))
-                if self.debug_transform:
-                    ipdb.set_trace()
+
                 to_body_rot_transform = TransformFromComponents([0,0,0], to_body_tf[1])
                 to_body_rot_inv = InvertTransform(to_body_rot_transform)
                 other_basis_tf = ComponentsFromTransform(ComposeTransforms(to_body_rot_transform,TransformFromComponents(*other_basis_tf)))
