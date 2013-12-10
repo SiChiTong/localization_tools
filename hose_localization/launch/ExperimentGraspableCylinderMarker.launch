@@ -1,31 +1,27 @@
 <launch>
-<arg name="remapped_tf" default="/tf" />
+<arg name="remapped_tf" default="/workstation_tf" />
 <arg name="output" default="log" />
+<arg name="relay_topic_prefix" default="/relay" />
+
 <!--<param name="robot_description" textfile="$(find drchubo_v3)/robots/drchubo_v3.urdf"/> -->
 
 
-    <node name="rviz_jon" pkg="rviz" type="rviz" args="-d $(find hose_localization)/graspable_cylinder.rviz" />
+    <node name="rviz_jon" pkg="rviz" type="rviz" args="-d $(find hose_localization)/graspable_cylinder.rviz" >
+    	  <remap from="/tf" to="$(arg remapped_tf)"/>
+    </node>
       
-
-
-
+<!--<include file="$(find hose_localization)/launch/LinkEndpoint.launch" />-->
 
     <include file="$(find hose_localization)/launch/LaunchHoseMarkers.launch" >
     	     <arg name="output" value="screen" />
-	     <arg name="input_point_cloud" value="/hokuyo_object_pointcloud" />
-	     <arg name="output_point_cloud" value="/octomap_input" />	     
+	     <arg name="input_point_cloud" value="$(arg relay_topic_prefix)/hokuyo_object_pointcloud" />
+	     <arg name="joint_topic_prefix" value="/hubo" />
+	     <arg name="relay_topic_prefix" value="$(arg relay_topic_prefix)" />
+	     <arg name="output_point_cloud" default="/octomap_input" />
+	     <arg name="remapped_tf" value="$(arg remapped_tf)"/>
     </include>
-   <node name="octomap_server" type="octomap_server_node" pkg="octomap_server">
-   	 <remap from="cloud_in" to="/octomap_input"/>
-	 <param name="frame_id" value = "/leftFoot"/>
-	 <param name="base_frame_id" value = "/leftFoot"/>
-	 <param name="occupancy_max_z" value="2.5"/>
-	 <param name="occupancy_min_z" value="0"/>
-	  <param name="filter_ground" value="1"/>
-	  <param name="pointcloud_max" value="2.5"/>
 
-    </node>		     
-	 
+
    <!--<node name="walking_odom" type="WalkingOdometry.py" pkg="hubo_hose_task_planner" /> -->
 
 </launch>

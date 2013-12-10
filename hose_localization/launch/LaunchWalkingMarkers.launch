@@ -2,31 +2,24 @@
 <arg name="remapped_tf" default="/tf" />
 <arg name="output" default="log" />
 <arg name="input_point_cloud" default="/rgbd_longrange/depth/points_xyzrgb" />
+<arg name="relay_topic_prefix" default="" />
+<arg name="joint_topic_prefix" default="/"/>
+
+
+
 <param name="left_foot_description" textfile="$(find hose_localization)/gripper_descriptions/foot_description.urdf"/>
 <param name="right_foot_description" textfile="$(find hose_localization)/gripper_descriptions/foot_description.urdf"/>
 
-   <!--    <node name="left_foot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
-       	     <remap from="robot_description" to="left_foot_description" />
-             <param name="tf_prefix" value="left_foot"/>
-	     <remap from="/tf" to="/tf_remapped" /> 
-       </node>	    
--->
+
+
  <node name="right_foot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
        	     <remap from="robot_description" to="right_foot_description" />
              <param name="tf_prefix" value="right_foot"/>
 	     <remap from="/tf" to="$(arg remapped_tf)" /> 
-	   
-	     <!--<remap from="joint_states" to="/relay/hubo_joint_states"/>-->
+	     <remap from="joint_states" to="$(arg relay_topic_prefix)$(arg joint_topic_prefix)joint_states" />
 	     
        </node>	    
 
-<!--    <node name="left_foot_marker" pkg="hose_localization" type="foot_marker.py" output="$(arg output)" >
-      <remap from="/tf" to="$(arg remapped_tf)" />
-      <param name="marker_namespace" value="/leftFoot"/>
-      <remap from="/tf" to="/workstation_tf" />
-
-    </node> 
--->
 
     <node name="right_foot_marker" pkg="hose_localization" type="foot_marker.py" output="screen" >
       
